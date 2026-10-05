@@ -1,0 +1,452 @@
+[
+  {
+    "id": "en-26",
+    "question": "What is the Ethiopian Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-27",
+    "question": "What is the scope of application of the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-28",
+    "question": "What objectives does the Startup Proclamation pursue?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-29",
+    "question": "How does the Startup Proclamation define a startup?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-30",
+    "question": "What does the Startup Proclamation say about innovation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-31",
+    "question": "Which institution administers the startup framework under the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-32",
+    "question": "What requirements must a business meet to be recognized as a startup?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-33",
+    "question": "What incentives does the Startup Proclamation provide for startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-34",
+    "question": "How are startups registered under the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-35",
+    "question": "What does the Startup Proclamation say about intellectual property for startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-36",
+    "question": "Does the Startup Proclamation address access to finance for startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-37",
+    "question": "What role do incubators and accelerators play under the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-38",
+    "question": "When did the Startup Proclamation come into force?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-39",
+    "question": "Which body issues directives under the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-40",
+    "question": "What does the Startup Proclamation say about startup support services?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "en-41",
+    "question": "What are the rights of an employee when an employment contract is terminated?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "en-42",
+    "question": "What does Ethiopian law say about employee annual leave?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "en-43",
+    "question": "What is the probation period for employees under Ethiopian law?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "en-44",
+    "question": "What severance pay is an employee entitled to?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "en-45",
+    "question": "What are the legal working hours in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "en-46",
+    "question": "Which law regulates personal data protection in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "en-47",
+    "question": "What rights do data subjects have under Ethiopian data protection law?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "en-48",
+    "question": "What are the obligations of data controllers in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "en-49",
+    "question": "Does Ethiopian law allow cross-border transfer of personal data?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "en-50",
+    "question": "What does the Commercial Code say about companies?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "commercial"
+    }
+  },
+  {
+    "id": "en-51",
+    "question": "What are the requirements for establishing a company in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "commercial"
+    }
+  },
+  {
+    "id": "en-52",
+    "question": "What are the duties of company directors under Ethiopian law?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "commercial"
+    }
+  },
+  {
+    "id": "en-53",
+    "question": "How can a private limited company be dissolved in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "commercial"
+    }
+  },
+  {
+    "id": "en-54",
+    "question": "According to Ethiopian law, what are the requirements for establishing a startup business?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "business"
+    }
+  },
+  {
+    "id": "en-55",
+    "question": "What licences are required to operate a business in Addis Ababa?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "business"
+    }
+  },
+  {
+    "id": "en-56",
+    "question": "What taxes apply to small businesses in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "tax"
+    }
+  },
+  {
+    "id": "en-57",
+    "question": "What is the VAT registration threshold in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "tax"
+    }
+  },
+  {
+    "id": "en-58",
+    "question": "What incentives exist for foreign investors in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "investment"
+    }
+  },
+  {
+    "id": "en-59",
+    "question": "Which sectors are reserved for domestic investors in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "investment"
+    }
+  },
+  {
+    "id": "en-60",
+    "question": "What is the current law regarding rural land administration?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "land"
+    }
+  },
+  {
+    "id": "en-61",
+    "question": "Can rural land be sold in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "land"
+    }
+  },
+  {
+    "id": "en-62",
+    "question": "What are the land use rights of farmers under Ethiopian law?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "land"
+    }
+  },
+  {
+    "id": "en-63",
+    "question": "What are the penalties for theft under the Ethiopian Criminal Code?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "criminal"
+    }
+  },
+  {
+    "id": "en-64",
+    "question": "How does Ethiopian law define criminal negligence?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "criminal"
+    }
+  },
+  {
+    "id": "en-65",
+    "question": "What are the rights of an arrested person in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "criminal_procedure"
+    }
+  },
+  {
+    "id": "en-66",
+    "question": "What is the legal age of marriage in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "family"
+    }
+  },
+  {
+    "id": "en-67",
+    "question": "What does the Revised Family Code say about divorce?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "family"
+    }
+  },
+  {
+    "id": "en-68",
+    "question": "What fundamental rights does the Ethiopian Constitution guarantee?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "constitution"
+    }
+  },
+  {
+    "id": "en-69",
+    "question": "What does the Constitution say about freedom of expression?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "constitution"
+    }
+  },
+  {
+    "id": "en-70",
+    "question": "What environmental impact assessment requirements exist in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "environment"
+    }
+  },
+  {
+    "id": "en-71",
+    "question": "Which institution regulates banks in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "banking"
+    }
+  },
+  {
+    "id": "en-72",
+    "question": "What customs duties apply to imported goods in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "customs"
+    }
+  },
+  {
+    "id": "en-73",
+    "question": "How are trademarks protected in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "intellectual_property"
+    }
+  },
+  {
+    "id": "en-74",
+    "question": "Which law regulates telecommunications in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "telecommunications"
+    }
+  },
+  {
+    "id": "en-75",
+    "question": "What are the visa requirements for foreign nationals in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "immigration"
+    }
+  }
+]

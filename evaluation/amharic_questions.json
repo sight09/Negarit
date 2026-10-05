@@ -1,0 +1,452 @@
+[
+  {
+    "id": "am-76",
+    "question": "የኢትዮጵያ የስታርታፕ አዋጅ ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-77",
+    "question": "የስታርታፕ አዋጁ የተፈፃሚነት ወሰን ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-78",
+    "question": "የስታርታፕ አዋጁ ዓላማዎች ምን ምን ናቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-79",
+    "question": "ስታርታፕ ማለት ምን ማለት ነው እንደ አዋጁ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-80",
+    "question": "የስታርታፕ አዋጁ ስለ ፈጠራ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-81",
+    "question": "የስታርታፕ አዋጁ የሚተዳደረው በየትኛው ተቋም ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-82",
+    "question": "አንድ ንግድ እንደ ስታርታፕ እንዲታወቅ ምን መስፈርት አለበት?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-83",
+    "question": "የስታርታፕ አዋጁ ምን ዓይነት ማበረታቻዎች ይሰጣል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-84",
+    "question": "ስታርታፖች እንዴት ይመዘገባሉ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-85",
+    "question": "የስታርታፕ አዋጁ ስለ የአውድ ንብረት መብት ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-86",
+    "question": "የስታርታፕ አዋጁ ስለ ፋይናንስ ተደራሽነት ምን ይደንግጋል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-87",
+    "question": "ኢንኩቤተሮች እና አክሰሌሬተሮች በአዋጁ ስር ምን ሚና አላቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-88",
+    "question": "የስታርታፕ አዋጁ መሠረታዊ ዓላማዎች የትኞቹ ናቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-89",
+    "question": "በአዋጁ ስር መምሪያ የሚያወጣው ማን ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-90",
+    "question": "የአዋጁ አፈፃፀም በየትኛው ቀን ይጀምራል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    }
+  },
+  {
+    "id": "am-91",
+    "question": "በኢትዮጵያ የሰራተኛ መብቶች ምንድን ናቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "am-92",
+    "question": "የስራ ስምሪት ውል ሲቋረጥ የሰራተኛው መብት ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "am-93",
+    "question": "የሰራተኛ ዓመታዊ ዕረፍት ሕግ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "am-94",
+    "question": "የሙከራ ጊዜ (probation) በሕግ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "am-95",
+    "question": "የስራ ሰዓት በኢትዮጵያ ሕግ ምን ያህል ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "labor"
+    }
+  },
+  {
+    "id": "am-96",
+    "question": "የኢትዮጵያ የግል መረጃ ጥበቃ ሕግ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "am-97",
+    "question": "የግል መረጃ ባለቤቶች ምን መብቶች አሏቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "am-98",
+    "question": "የመረጃ ተቆጣጣሪዎች ግዴታ ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "am-99",
+    "question": "የግል መረጃን ወደ ሌላ አገር ማስተላለፍ ይፈቀዳል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "data_protection"
+    }
+  },
+  {
+    "id": "am-100",
+    "question": "የንግድ ሕግ መመሪያ ስለ ኩባኒያዎች ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "commercial"
+    }
+  },
+  {
+    "id": "am-101",
+    "question": "በኢትዮጵያ ኩባኒያ ለመመስረት ምን መስፈርቶች አሉ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "commercial"
+    }
+  },
+  {
+    "id": "am-102",
+    "question": "የኩባኒያ ዳይሬክተሮች ተግባር ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "commercial"
+    }
+  },
+  {
+    "id": "am-103",
+    "question": "በኢትዮጵያ ስራ ለመጀምር ምን ፍቃዶች ያስፈልጋሉ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "business"
+    }
+  },
+  {
+    "id": "am-104",
+    "question": "ለትናንሽ ንግዶች ምን ዓይነት ግብሮች አሉ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "tax"
+    }
+  },
+  {
+    "id": "am-105",
+    "question": "የቫት (VAT) ምዝገባ መቶኛ ስንት ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "tax"
+    }
+  },
+  {
+    "id": "am-106",
+    "question": "ለውጭ ባለሃብቶች ምን ማበረታቻዎች አሉ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "investment"
+    }
+  },
+  {
+    "id": "am-107",
+    "question": "የትኞቹ ዘርፎች ለሀገር ውስጥ ባለሃብቶች ብቻ የተለዩ ናቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "investment"
+    }
+  },
+  {
+    "id": "am-108",
+    "question": "ስለ ገጠር መሬት አስተዳደር ወቅታዊው ሕግ ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "land"
+    }
+  },
+  {
+    "id": "am-109",
+    "question": "የገጠር መሬት መሸጥ ይቻላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "land"
+    }
+  },
+  {
+    "id": "am-110",
+    "question": "የገበሬዎች የመሬት አጠቃቀም መብት ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "land"
+    }
+  },
+  {
+    "id": "am-111",
+    "question": "ስለ ስህተት (theft) ቅጣት ሕጉ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "criminal"
+    }
+  },
+  {
+    "id": "am-112",
+    "question": "የተያዘ ሰው መብቶች ምንድን ናቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "criminal_procedure"
+    }
+  },
+  {
+    "id": "am-113",
+    "question": "የጋብቻ ሕጋዊ እድሜ ስንት ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "family"
+    }
+  },
+  {
+    "id": "am-114",
+    "question": "የቤተሰብ ሕግ ስለ ፍቺ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "family"
+    }
+  },
+  {
+    "id": "am-115",
+    "question": "ሕገ መንግሥቱ ስለ መሠረታዊ መብቶች ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "constitution"
+    }
+  },
+  {
+    "id": "am-116",
+    "question": "ስለ አስተሳሰብ ነፃነት ሕገ መንግሥቱ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "constitution"
+    }
+  },
+  {
+    "id": "am-117",
+    "question": "ስለ አካባቢ ጥልቀት ጥናት (EIA) ሕግ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "environment"
+    }
+  },
+  {
+    "id": "am-118",
+    "question": "ባንኮችን የሚቆጣጠረው የትኛው ተቋም ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "banking"
+    }
+  },
+  {
+    "id": "am-119",
+    "question": "ስለ የገቢ ዕቃዎች ቀረጥ ሕግ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "customs"
+    }
+  },
+  {
+    "id": "am-120",
+    "question": "የንግድ ምልክት (trademark) መብት እንዴት ይጠበቃል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "intellectual_property"
+    }
+  },
+  {
+    "id": "am-121",
+    "question": "ቴሌኮሙኒኬሽንን የሚቆጣጠረው ሕግ የትኛው ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "telecommunications"
+    }
+  },
+  {
+    "id": "am-122",
+    "question": "ለውጭ ዜጎች የቪዛ መስፈርቶች ምን ናቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "immigration"
+    }
+  },
+  {
+    "id": "am-123",
+    "question": "የንጽሕና አገልግሎቶችን የሚቆጣጠረው ሕግ ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "health"
+    }
+  },
+  {
+    "id": "am-124",
+    "question": "የትምህርት ሥርዓቱን የሚቆጣጠረው ሕግ ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "education"
+    }
+  },
+  {
+    "id": "am-125",
+    "question": "የምርጫ ሕግ ምን ይደንግጋል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "category": "elections"
+    }
+  }
+]

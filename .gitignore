@@ -1,0 +1,11 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+data/uploads/
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+evaluation/report.json

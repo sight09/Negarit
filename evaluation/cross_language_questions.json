@@ -1,0 +1,277 @@
+[
+  {
+    "id": "am-126",
+    "question": "የኢትዮጵያ የስታርታፕ አዋጅ ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-127",
+    "question": "የስታርታፕ አዋጁ የተፈፃሚነት ወሰን ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-128",
+    "question": "የስታርታፕ አዋጁ ዓላማዎች ምን ምን ናቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-129",
+    "question": "ስታርታፕ ማለት ምን ማለት ነው እንደ አዋጁ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-130",
+    "question": "የስታርታፕ አዋጁ ስለ ፈጠራ ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-131",
+    "question": "የስታርታፕ አዋጁ የሚተዳደረው በየትኛው ተቋም ነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-132",
+    "question": "አንድ ንግድ እንደ ስታርታፕ እንዲታወቅ ምን መስፈርት አለበት?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-133",
+    "question": "የስታርታፕ አዋጁ ምን ዓይነት ማበረታቻዎች ይሰጣል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-134",
+    "question": "ስታርታፖች እንዴት ይመዘገባሉ?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-135",
+    "question": "የስታርታፕ አዋጁ ስለ የአውድ ንብረት መብት ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-136",
+    "question": "የስታርታፕ አዋጁ ስለ ፋይናንስ ተደራሽነት ምን ይደንግጋል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "am-137",
+    "question": "ኢንኩቤተሮች እና አክሰሌሬተሮች በአዋጁ ስር ምን ሚና አላቸው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "Amharic question; should retrieve English + Amharic chunks of the same document."
+  },
+  {
+    "id": "en-138",
+    "question": "What is the Ethiopian Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-139",
+    "question": "What is the scope of application of the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-140",
+    "question": "What objectives does the Startup Proclamation pursue?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-141",
+    "question": "How does the Startup Proclamation define a startup?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-142",
+    "question": "What does the Startup Proclamation say about innovation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-143",
+    "question": "Which institution administers the startup framework under the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-144",
+    "question": "What requirements must a business meet to be recognized as a startup?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-145",
+    "question": "What incentives does the Startup Proclamation provide for startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-146",
+    "question": "How are startups registered under the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-147",
+    "question": "What does the Startup Proclamation say about intellectual property for startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-148",
+    "question": "Does the Startup Proclamation address access to finance for startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-149",
+    "question": "What role do incubators and accelerators play under the Startup Proclamation?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  },
+  {
+    "id": "en-150",
+    "question": "When did the Startup Proclamation come into force?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CROSS_LANGUAGE",
+    "note": "English question; Amharic chunk of the same article is a valid cross-lingual hit."
+  }
+]

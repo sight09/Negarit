@@ -1,0 +1,274 @@
+[
+  {
+    "id": "en-1",
+    "question": "What does Article 1 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "1"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-2",
+    "question": "Show me Article 2 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "2"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-3",
+    "question": "What does Article 3 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "3"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-4",
+    "question": "Show me Article 4 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "4"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-5",
+    "question": "What does Article 5 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "5"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-6",
+    "question": "Show me Article 6 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "6"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-7",
+    "question": "What does Article 7 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "7"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-8",
+    "question": "Show me Article 8 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "8"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-9",
+    "question": "What does Article 9 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "9"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-10",
+    "question": "Show me Article 10 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "10"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-11",
+    "question": "What does Article 11 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "11"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-12",
+    "question": "Show me Article 12 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "12"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-13",
+    "question": "What does Article 13 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "13"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-14",
+    "question": "Show me Article 14 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "14"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-15",
+    "question": "What does Article 15 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "15"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-16",
+    "question": "Show me Article 16 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "16"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-17",
+    "question": "What does Article 17 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "17"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-18",
+    "question": "Show me Article 18 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "18"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-19",
+    "question": "What does Article 19 of Proclamation 1396/2025 say?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "19"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-20",
+    "question": "Show me Article 20 of the Startup Proclamation (1396/2025).",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "20"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "en-21",
+    "question": "What is Proclamation 1396/2025?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "PROCLAMATION_LOOKUP"
+  },
+  {
+    "id": "en-22",
+    "question": "Tell me about proclamation number 1396/2025.",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "PROCLAMATION_LOOKUP"
+  },
+  {
+    "id": "am-23",
+    "question": "አዋጅ ቁጥር 1396/2025 ምንድነው?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "PROCLAMATION_LOOKUP"
+  },
+  {
+    "id": "am-24",
+    "question": "የአዋጅ 1396/2025 አንቀጽ 1 ምን ይላል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "1"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  },
+  {
+    "id": "am-25",
+    "question": "አንቀጽ 2 በአዋጅ 1396/2025 ስዕረት ምን ይዟል?",
+    "language": "am",
+    "expectedLanguage": "am",
+    "expected": {
+      "proclamationNumber": "1396/2025",
+      "article": "2"
+    },
+    "kind": "ARTICLE_LOOKUP"
+  }
+]

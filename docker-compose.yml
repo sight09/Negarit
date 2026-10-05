@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  app:
+    # Single container serving the Next.js frontend AND the API layer
+    # (the FastAPI-style backend modules live under src/server/*).
+    image: node:22-bookworm
+    working_dir: /app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/app_db
+      QDRANT_URL: http://qdrant:6333
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - app_node_modules:/app/node_modules
+      - upload_data:/app/data/uploads
+    command: >
+      sh -c "if [ ! -x node_modules/.bin/next ]; then npm ci; fi &&
+             npx drizzle-kit push --force &&
+             npm run build &&
+             npm run start"
+
+volumes:
+  pgdata:
+  qdrant_data:
+  upload_data:
+  app_node_modules:

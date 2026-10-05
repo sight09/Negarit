@@ -1,0 +1,277 @@
+[
+  {
+    "id": "en-151",
+    "question": "What is the current law governing startups in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "startup"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-152",
+    "question": "Which proclamation currently regulates startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "startup"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-153",
+    "question": "What is the current law regarding rural land administration?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "land"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-154",
+    "question": "Which labour proclamation is currently in force?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-155",
+    "question": "Which law currently regulates personal data protection?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "data_protection"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-156",
+    "question": "What commercial code currently applies in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "commercial"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-157",
+    "question": "What did the rural land proclamation say before it was amended?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "land"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-158",
+    "question": "What did labour law say about annual leave in 2010?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-159",
+    "question": "What did the repealed commercial code say about companies?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "commercial"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-160",
+    "question": "What was the previous VAT proclamation in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "tax"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-161",
+    "question": "Is the Startup Proclamation 1396/2025 currently in force or amended?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-162",
+    "question": "Was there a personal data protection law in Ethiopia before 2024?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "data_protection"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-163",
+    "question": "Which law did the current business registration rules replace?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "business"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-164",
+    "question": "What is the currently applicable severance pay rule?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-165",
+    "question": "What investment law is currently in force in Ethiopia?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "investment"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-166",
+    "question": "What did the old investment proclamation say about incentives?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "investment"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-167",
+    "question": "Compare the current rural land law with the previous proclamation.",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "land"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  },
+  {
+    "id": "en-168",
+    "question": "Compare the current commercial code with the 1960 commercial code.",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "commercial"
+    },
+    "kind": "COMPARISON",
+    "timeframe": "comparison"
+  },
+  {
+    "id": "en-169",
+    "question": "Compare the current labour proclamation with the previous one.",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "labor"
+    },
+    "kind": "COMPARISON",
+    "timeframe": "comparison"
+  },
+  {
+    "id": "en-170",
+    "question": "Compare the startup proclamation with general investment law.",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "proclamationNumber": "1396/2025"
+    },
+    "kind": "COMPARISON",
+    "timeframe": "comparison"
+  },
+  {
+    "id": "en-171",
+    "question": "Compare data protection rules with cybersecurity rules in Ethiopia.",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "data_protection"
+    },
+    "kind": "COMPARISON",
+    "timeframe": "comparison"
+  },
+  {
+    "id": "en-172",
+    "question": "What tax laws currently apply to startups?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "tax"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-173",
+    "question": "Is the FDRE Constitution currently in force?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "constitution"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-174",
+    "question": "Is the 2004 Criminal Code currently in force?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "criminal"
+    },
+    "kind": "CURRENT_LAW",
+    "timeframe": "current"
+  },
+  {
+    "id": "en-175",
+    "question": "What did the customs proclamation say before amendment?",
+    "language": "en",
+    "expectedLanguage": "en",
+    "expected": {
+      "category": "customs"
+    },
+    "kind": "HISTORICAL_LAW",
+    "timeframe": "historical"
+  }
+]

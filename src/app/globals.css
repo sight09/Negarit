@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-amharic: var(--font-ethiopic), "Nyala", serif;
+}
+
+@theme {
+  --color-ink-950: #0a1322;
+  --color-ink-900: #101d33;
+  --color-ink-800: #18294a;
+  --color-ink-700: #223755;
+  --color-ink-600: #32496c;
+  --color-ink-500: #4c6285;
+  --color-ink-400: #788ca9;
+  --color-ink-300: #a9b7cb;
+  --color-ink-200: #cfd8e3;
+  --color-ink-100: #e6ebf1;
+  --color-ink-50: #f3f6f9;
+
+  --color-paper-50: #fbf8f1;
+  --color-paper-100: #f6f1e5;
+  --color-paper-200: #eee6d2;
+  --color-paper-300: #e0d3b5;
+
+  --color-brass-100: #f1e6cb;
+  --color-brass-300: #d9b96f;
+  --color-brass-500: #a97e34;
+  --color-brass-600: #8a6527;
+  --color-brass-700: #6c4d1d;
+
+  --color-jade-100: #dcefdf;
+  --color-jade-600: #2e7d4f;
+  --color-clay-100: #f6ded4;
+  --color-clay-600: #b34a2f;
+  --color-gold-100: #f4e9c8;
+  --color-gold-600: #9a7b24;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-image:
+    radial-gradient(1100px 480px at 85% -10%, rgba(169, 126, 52, 0.08), transparent 60%),
+    radial-gradient(900px 420px at -10% 0%, rgba(16, 29, 51, 0.06), transparent 55%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--color-brass-300);
+  color: var(--color-ink-950);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+.ethiopic {
+  font-family: var(--font-amharic);
+}
+
+.paper-card {
+  background: #fffdf8;
+  border: 1px solid rgba(16, 29, 51, 0.12);
+  box-shadow:
+    0 1px 0 rgba(16, 29, 51, 0.04),
+    0 12px 32px -18px rgba(16, 29, 51, 0.25);
+}
+
+.label-caps {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-ink-500);
+}
+
+.hairline {
+  border-color: rgba(16, 29, 51, 0.12);
+}
+
+.rule-double {
+  border-top: 3px double rgba(16, 29, 51, 0.35);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(16, 29, 51, 0.05) 25%, rgba(16, 29, 51, 0.12) 50%, rgba(16, 29, 51, 0.05) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.answer-md {
+  line-height: 1.75;
+}
+.answer-md p {
+  margin: 0 0 0.9em;
+}
+.answer-md strong {
+  color: var(--color-ink-950);
+  font-weight: 650;
+}
+.answer-md blockquote {
+  border-left: 3px solid var(--color-brass-500);
+  background: rgba(169, 126, 52, 0.06);
+  padding: 0.6em 1em;
+  margin: 0.8em 0;
+  border-radius: 0 6px 6px 0;
+  color: var(--color-ink-800);
+  font-size: 0.95em;
+}
+.answer-md h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02em;
+  margin: 1.1em 0 0.35em;
+  color: var(--color-ink-800);
+}
+.answer-md hr {
+  border: none;
+  border-top: 1px solid rgba(16, 29, 51, 0.15);
+  margin: 1.2em 0 0.6em;
+}
+
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: rgba(16, 29, 51, 0.18);
+  border-radius: 4px;
+}
+.scroll-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
