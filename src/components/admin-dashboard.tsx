@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -16,13 +17,16 @@ import {
   Layers,
   Loader2,
   RefreshCw,
-  Scale,
   Search,
   Server,
   Sparkles,
   Trash2,
   UploadCloud,
   X,
+  Menu,
+  Activity,
+  Cpu,
+  Zap,
 } from "lucide-react";
 import {
   deleteDocument,
@@ -37,6 +41,7 @@ import {
 } from "@/lib/api";
 import type { Analytics, ChunkRow, DocumentRow, HealthStatus, JobRow } from "@/lib/types";
 import { Button, Card, LangBadge, Spinner, StatusChip, cn } from "./ui";
+import { Sidebar } from "./sidebar";
 
 const CATEGORIES = [
   "constitution","civil","criminal","criminal_procedure","commercial","business","labor",
@@ -59,20 +64,6 @@ const JOB_STYLES: Record<string, string> = {
   QUEUED: "text-ink-500 bg-ink-100 border-ink-200",
 };
 
-function Stat({ label, value, icon: Icon }: { label: string; value: string | number; icon: typeof Database }) {
-  return (
-    <Card className="flex items-center gap-3 p-4">
-      <div className="flex size-10 items-center justify-center rounded-lg bg-ink-900 text-brass-300">
-        <Icon className="size-5" />
-      </div>
-      <div>
-        <p className="num text-xl font-bold leading-none">{value}</p>
-        <p className="mt-1 text-[11px] font-medium text-ink-500">{label}</p>
-      </div>
-    </Card>
-  );
-}
-
 export default function AdminDashboard() {
   const [token, setToken] = useState("");
   const [health, setHealth] = useState<HealthStatus | null>(null);
@@ -86,8 +77,29 @@ export default function AdminDashboard() {
   const [chunksDoc, setChunksDoc] = useState<{ doc: DocumentRow; chunks: ChunkRow[]; lang: string } | null>(null);
   const [detail, setDetail] = useState<DocumentRow | null>(null);
   const [embedTest, setEmbedTest] = useState<string | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("elr-sidebar-collapsed");
+      if (saved !== null) {
+        setSidebarCollapsed(saved === "true");
+      }
+    } catch {
+      // default is false (showing sidebar)
+    }
+  }, []);
+
+  const toggleSidebarCollapsed = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("elr-sidebar-collapsed", String(next));
+      return next;
+    });
+  };
 
   const refresh = useCallback(async () => {
     const [h, a, d] = await Promise.all([
@@ -194,62 +206,236 @@ export default function AdminDashboard() {
     }
   };
 
+  const docsCount = analytics?.totals.documents ?? health?.stats.documents ?? 0;
+  const chunksCount = analytics?.totals.chunks ?? health?.stats.chunks ?? 0;
+  const embeddedCount = analytics?.totals.embeddedChunks ?? 0;
+  const articlesCount = analytics?.totals.articles ?? health?.stats.articles ?? 0;
+  const avgRetrieval = analytics?.totals.avgRetrievalMs ?? 0;
+  const avgLlm = analytics?.totals.avgLlmMs ?? 0;
+  const coveragePct = chunksCount > 0 ? Math.min(100, Math.round((embeddedCount / chunksCount) * 100)) : 0;
+
   return (
-    <div className="mx-auto min-h-screen max-w-6xl px-4 pb-16 sm:px-6">
-      <header className="flex flex-wrap items-center justify-between gap-3 border-b hairline py-4">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-1.5 text-[12.5px] font-medium text-ink-500 hover:text-ink-800">
-            <ArrowLeft className="size-3.5" /> Research console
-          </Link>
-          <span className="text-ink-200">|</span>
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-9 items-center justify-center rounded-lg bg-ink-900 text-brass-300">
-              <Scale className="size-4.5" />
-            </div>
-            <div>
-              <h1 className="font-display text-lg font-bold leading-tight">Corpus Administration</h1>
-              <p className="text-[11px] text-ink-500">Ingest gazettes · monitor jobs · inspect chunks</p>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <KeyRound className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-ink-400" />
-            <input
-              value={token}
-              onChange={(e) => saveToken(e.target.value)}
-              placeholder="Admin token (if ADMIN_TOKEN is set)"
-              type="password"
-              className="w-64 rounded-lg border border-ink-200 bg-paper-50 py-1.5 pl-8 pr-3 text-[12px] outline-none focus:border-brass-500"
-            />
-          </div>
-          <Button variant="outline" onClick={() => void refresh()}>
-            <RefreshCw className="size-3.5" /> Refresh
-          </Button>
-        </div>
-      </header>
+    <div className="flex min-h-screen bg-[#f7f4ed] text-ink-900 font-sans">
+      <Sidebar
+        activeItem="admin"
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={toggleSidebarCollapsed}
+        mobileOpen={mobileMenuOpen}
+        onMobileClose={() => setMobileMenuOpen(false)}
+      />
 
-      {/* ── System + analytics ──────────────────────────────────────── */}
-      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-        <Stat label="Documents" value={analytics?.totals.documents ?? health?.stats.documents ?? 0} icon={FileText} />
-        <Stat label="Chunks" value={analytics?.totals.chunks ?? 0} icon={Layers} />
-        <Stat label="Embedded chunks" value={analytics?.totals.embeddedChunks ?? 0} icon={Sparkles} />
-        <Stat label="Articles" value={analytics?.totals.articles ?? 0} icon={Database} />
-        <Stat label="Avg retrieval ms" value={analytics?.totals.avgRetrievalMs ?? 0} icon={Clock3} />
-        <Stat label="Avg LLM ms" value={analytics?.totals.avgLlmMs ?? 0} icon={Server} />
+      <main className="flex-1 min-w-0 px-4 py-6 sm:px-8 lg:px-10 overflow-y-auto">
+        <div className="mx-auto max-w-6xl pb-16">
+          <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ded5c2]/60 pb-4">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(true)}
+                className="rounded-lg border border-[#ded5c2] p-1.5 text-ink-700 hover:bg-white md:hidden"
+                aria-label="Open sidebar"
+              >
+                <Menu className="size-5" />
+              </button>
+              <div className="flex items-center gap-2.5">
+                <Image
+                  src="/logo.png"
+                  alt="Corpus Administration Logo"
+                  width={36}
+                  height={36}
+                  className="size-9 object-contain"
+                  priority
+                />
+                <div>
+                  <h1 className="font-display text-lg font-bold leading-tight">Corpus Administration</h1>
+                  <p className="text-[11px] text-ink-500">Ingest gazettes · monitor jobs · inspect chunks</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <KeyRound className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-ink-400" />
+                <input
+                  value={token}
+                  onChange={(e) => saveToken(e.target.value)}
+                  placeholder="Admin token (if ADMIN_TOKEN is set)"
+                  type="password"
+                  className="w-64 rounded-lg border border-ink-200 bg-paper-50 py-1.5 pl-8 pr-3 text-[12px] outline-none focus:border-brass-500"
+                />
+              </div>
+              <Button variant="outline" onClick={() => void refresh()}>
+                <RefreshCw className="size-3.5" /> Refresh
+              </Button>
+            </div>
+          </header>
+
+      {/* ── Creative Bento Telemetry Suite ─────────────────────────── */}
+      <section className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-12">
+        {/* Card 1: Official Gazette Corpus Assets (4 cols) */}
+        <div className="lg:col-span-4 rounded-2xl border border-[#ded5c2] bg-white p-5 shadow-2xs flex flex-col justify-between transition-all hover:border-[#deb152]/60 hover:shadow-xs group">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f4eee2] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#8a6527]">
+                <FileText className="size-3 text-[#deb152]" />
+                Official Gazette Corpus
+              </span>
+              <span className="text-[11px] font-medium text-ink-400">Library Assets</span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-4">
+              <div className="border-r border-[#f0e8db] pr-3">
+                <p className="num text-3xl font-extrabold tracking-tight text-ink-950">
+                  {docsCount}
+                </p>
+                <p className="mt-1 text-xs font-semibold text-ink-800">Gazette Documents</p>
+                <p className="text-[10.5px] text-ink-400 mt-0.5">Enacted PDF Acts</p>
+              </div>
+              <div className="pl-1">
+                <p className="num text-3xl font-extrabold tracking-tight text-[#b88c32]">
+                  {articlesCount}
+                </p>
+                <p className="mt-1 text-xs font-semibold text-ink-800">Articles & Clauses</p>
+                <p className="text-[10.5px] text-ink-400 mt-0.5">Indexed Provisions</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 pt-3 border-t border-[#f4ede2] flex items-center justify-between text-xs">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-ink-500">
+              <span className={cn("size-2 rounded-full", docsCount > 0 ? "bg-[#10b981]" : "bg-[#f59e0b]")} />
+              {docsCount > 0 ? "Corpus loaded & active" : "Ready for PDF upload"}
+            </span>
+            <span className="rounded-full bg-[#fbf5e7] border border-[#f0e3c5] px-2 py-0.5 font-bold text-[#8a6527] text-[10.5px]">
+              Bilingual
+            </span>
+          </div>
+        </div>
+
+        {/* Card 2: Vector Space & Embeddings (4 cols) */}
+        <div className="lg:col-span-4 rounded-2xl border border-[#ded5c2] bg-gradient-to-br from-white via-[#fcfaf5] to-[#fbf5e7] p-5 shadow-2xs flex flex-col justify-between transition-all hover:border-[#deb152]/60 hover:shadow-xs group">
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#deb152]/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#8a6527]">
+                <Sparkles className="size-3 text-[#deb152]" />
+                Vector Intelligence
+              </span>
+              <span className="text-[11px] font-mono text-[#8a6527] font-semibold">1024-dim</span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-4">
+              <div className="border-r border-[#eddcc0] pr-3">
+                <p className="num text-3xl font-extrabold tracking-tight text-ink-950">
+                  {chunksCount}
+                </p>
+                <p className="mt-1 text-xs font-semibold text-ink-800">Text Chunks</p>
+                <p className="text-[10.5px] text-ink-400 mt-0.5">Bilingual Slices</p>
+              </div>
+              <div className="pl-1">
+                <p className="num text-3xl font-extrabold tracking-tight text-[#b88c32]">
+                  {embeddedCount}
+                </p>
+                <p className="mt-1 text-xs font-semibold text-ink-800">Vectors</p>
+                <p className="text-[10.5px] text-ink-400 mt-0.5">Dense Points</p>
+              </div>
+            </div>
+
+            {/* Vector Density Progress Track */}
+            <div className="mt-4">
+              <div className="flex items-center justify-between text-[11px] mb-1.5">
+                <span className="font-medium text-ink-600">Vector Index Density</span>
+                <span className="font-bold text-[#8a6527]">{coveragePct}%</span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-[#ede5d6]">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-[#deb152] to-[#b38525] transition-all duration-500"
+                  style={{ width: `${Math.max(coveragePct, chunksCount === 0 ? 0 : 5)}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 pt-2">
+            <button
+              onClick={() => void runEmbedTest()}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#deb152]/50 bg-white/90 py-1.5 px-3 text-xs font-semibold text-[#8a6527] hover:bg-[#deb152] hover:text-ink-950 transition-all shadow-2xs cursor-pointer"
+            >
+              <Sparkles className="size-3.5 text-[#deb152]" /> Test BGE-M3 Embedding
+            </button>
+            {embedTest && (
+              <p className="mt-2 text-[11px] text-ink-600 bg-white/80 rounded-lg p-2 border border-[#deb152]/40">
+                {embedTest}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Card 3: Real-Time Engine Telemetry (4 cols) */}
+        <div className="lg:col-span-4 rounded-2xl border border-[#1e2d42] bg-[#0d1625] p-5 shadow-sm text-white flex flex-col justify-between transition-all hover:border-[#deb152]/40 group relative overflow-hidden">
+          {/* Subtle background glow */}
+          <div className="pointer-events-none absolute -right-12 -top-12 size-36 rounded-full bg-[#deb152]/5 blur-2xl" />
+
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#17253a] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#deb152]">
+                <Activity className="size-3 text-[#10b981]" />
+                Engine Telemetry
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10.5px] text-[#7e92ac]">
+                <span className="size-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                Live Subsystems
+              </span>
+            </div>
+
+            {/* Dual Latency HUD */}
+            <div className="mt-5 grid grid-cols-2 gap-4">
+              <div className="border-r border-[#1a283c] pr-3">
+                <div className="flex items-baseline gap-1">
+                  <span className="num text-3xl font-extrabold tracking-tight text-white">{avgRetrieval}</span>
+                  <span className="text-xs text-[#7e92ac] font-mono">ms</span>
+                </div>
+                <div className="flex items-center gap-1 mt-1 text-xs font-semibold text-[#a6b8ce]">
+                  <Zap className="size-3 text-[#deb152]" />
+                  <span>Avg Retrieval</span>
+                </div>
+                <p className="text-[10px] text-[#5e718b] mt-0.5">Hybrid BM25 + Vector</p>
+              </div>
+
+              <div className="pl-1">
+                <div className="flex items-baseline gap-1">
+                  <span className="num text-3xl font-extrabold tracking-tight text-white">{avgLlm}</span>
+                  <span className="text-xs text-[#7e92ac] font-mono">ms</span>
+                </div>
+                <div className="flex items-center gap-1 mt-1 text-xs font-semibold text-[#a6b8ce]">
+                  <Cpu className="size-3 text-[#deb152]" />
+                  <span>Avg LLM</span>
+                </div>
+                <p className="text-[10px] text-[#5e718b] mt-0.5">Synthesis Latency</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Subsystem Health Status Ribbon */}
+          <div className="mt-5 pt-3 border-t border-[#1a283c]">
+            <div className="grid grid-cols-2 gap-2 text-[11px]">
+              <div className="flex items-center gap-1.5">
+                <span className={cn("size-2 rounded-full", health?.subsystems?.database ? "bg-[#10b981]" : "bg-[#ef4444]")} />
+                <span className="text-[#a6b8ce] truncate">PostgreSQL</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className={cn("size-2 rounded-full", health?.subsystems?.qdrant === "ok" || health?.subsystems?.qdrant === "up" ? "bg-[#10b981]" : "bg-[#f87171]")} />
+                <span className="text-[#a6b8ce] truncate">Qdrant ({health?.subsystems?.qdrant ?? "off"})</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className={cn("size-2 rounded-full", health?.subsystems?.embeddings === "configured" ? "bg-[#10b981]" : "bg-[#f59e0b]")} />
+                <span className="text-[#a6b8ce] truncate">BGE-M3</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className={cn("size-2 rounded-full", health?.subsystems?.llm === "configured" ? "bg-[#10b981]" : "bg-[#f59e0b]")} />
+                <span className="text-[#a6b8ce] truncate">OpenRouter LLM</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
-
-      <Card className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 p-3.5 text-[12px]">
-        <span className="label-caps">Subsystems</span>
-        <Subsys ok={health?.subsystems.database === true} label="PostgreSQL" />
-        <Subsys ok={health?.subsystems.qdrant === "up"} warn={health?.subsystems.qdrant === "not_configured"} label={`Qdrant (${health?.subsystems.qdrant ?? "…"})`} />
-        <Subsys ok={health?.subsystems.embeddings === "configured"} warn label="BGE-M3 / HF" />
-        <Subsys ok={health?.subsystems.llm === "configured"} warn label="OpenRouter LLM" />
-        <button onClick={() => void runEmbedTest()} className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-brass-500/40 bg-brass-100/50 px-2.5 py-1 font-semibold text-brass-700 transition hover:bg-brass-100">
-          <Sparkles className="size-3.5" /> Test BGE-M3 bilingual embedding
-        </button>
-        {embedTest && <span className="w-full text-[11.5px] text-ink-500">{embedTest}</span>}
-      </Card>
 
       {/* ── Upload ──────────────────────────────────────────────────── */}
       <Card className="mt-6 p-5 sm:p-6">
@@ -428,9 +614,11 @@ export default function AdminDashboard() {
           );
         })}
       </div>
+    </div>
+  </main>
 
-      {/* ── Chunk explorer drawer ───────────────────────────────────── */}
-      {chunksDoc && (
+  {/* ── Chunk explorer drawer ───────────────────────────────────── */}
+  {chunksDoc && (
         <div className="fixed inset-0 z-40 flex justify-end bg-ink-950/40 backdrop-blur-[2px]" onClick={() => setChunksDoc(null)}>
           <aside className="flex h-full w-full max-w-2xl flex-col bg-paper-50 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between border-b hairline bg-ink-900 px-5 py-4 text-paper-50">
@@ -482,18 +670,6 @@ export default function AdminDashboard() {
         </div>
       )}
     </div>
-  );
-}
-
-function Subsys({ ok, warn, label }: { ok: boolean; warn?: boolean; label: string }) {
-  return (
-    <span className={cn(
-      "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-semibold",
-      ok ? "border-jade-600/30 bg-jade-100 text-jade-600" : warn ? "border-gold-600/30 bg-gold-100 text-gold-600" : "border-clay-600/30 bg-clay-100 text-clay-600",
-    )}>
-      <span className="size-1.5 rounded-full bg-current" />
-      {label}
-    </span>
   );
 }
 

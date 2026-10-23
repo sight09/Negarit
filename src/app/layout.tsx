@@ -12,9 +12,16 @@ const ethiopic = Noto_Sans_Ethiopic({
 });
 
 export const metadata: Metadata = {
-  title: "Ethiopian Legal RAG — Bilingual Legal Research | የኢትዮጵያ ሕግ ምርምር",
+  title: "Negarit (ነጋሪት) — Bilingual Legal Research AI",
   description:
-    "Bilingual (Amharic/English) Ethiopian legal research assistant grounded in indexed official gazette sources. It provides legal information, not legal advice.",
+    "Negarit (ነጋሪት) is a bilingual (Amharic/English) Ethiopian legal research assistant grounded in indexed official gazette sources. It provides legal information, not legal advice.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

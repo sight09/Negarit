@@ -1,12 +1,16 @@
 {
-  "name": "nextjs-postgresql-template",
+  "name": "negarit-legal-rag",
+  "version": "1.0.0",
+  "description": "Bilingual (Amharic/English) Ethiopian Legal Research RAG AI",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "eval": "node scripts/evaluate.mjs",
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "dotenv": "17.3.1",

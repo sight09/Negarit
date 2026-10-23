@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="100%" height="100%" role="img" aria-labelledby="negarit-title negarit-desc">
+  <title id="negarit-title">Negarit (ነጋሪት) Logo</title>
+  <desc id="negarit-desc">An open golden book appears, golden scales of justice assemble and balance at its centre, the Amharic name ነጋሪት types in, then Negarit types in beneath it, ending with a soft golden glow.</desc>
+
+  <defs>
+    <linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="0" y1="150" x2="0" y2="900">
+      <stop offset="0" stop-color="#FFE38A"/>
+      <stop offset="0.5" stop-color="#F5C542"/>
+      <stop offset="1" stop-color="#D9961E"/>
+    </linearGradient>
+    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFF4CC" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#FFF4CC" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#FFF4CC" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    /* 1. Book: two halves slide in from opposite sides and settle */
+    .book-left  { animation: slideLeft  1.2s cubic-bezier(.22,.8,.25,1) 0.4s both; }
+    .book-right { animation: slideRight 1.2s cubic-bezier(.22,.8,.25,1) 0.5s both; }
+    @keyframes slideLeft {
+      0%   { opacity: 0; transform: translateX(-300px); }
+      60%  { opacity: 1; transform: translateX(14px); }
+      80%  { transform: translateX(-5px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideRight {
+      0%   { opacity: 0; transform: translateX(300px); }
+      60%  { opacity: 1; transform: translateX(-14px); }
+      80%  { transform: translateX(5px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+
+    /* 2. Scales: stroke drawing, fades, and a balancing tilt */
+    .draw { animation: draw 0.8s cubic-bezier(.45,0,.2,1) both; }
+    @keyframes draw {
+      from { stroke-dasharray: 1; stroke-dashoffset: 1; }
+      to   { stroke-dasharray: 1; stroke-dashoffset: 0; }
+    }
+    .fade { animation: fadeIn 0.6s ease-out both; }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .balance {
+      transform-origin: 500px 346px;
+      animation: balance 1.9s ease-in-out 4.3s both;
+    }
+    @keyframes balance {
+      0%   { transform: rotate(0deg); }
+      30%  { transform: rotate(3deg); }
+      55%  { transform: rotate(-2.4deg); }
+      75%  { transform: rotate(1.1deg); }
+      90%  { transform: rotate(-0.4deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* 3 and 4. Typed text: one glyph or letter at a time */
+    .glyph, .letter { animation: typeIn 0.45s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes typeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 5. Final polish: glow and one light sweep */
+    .finish { animation: glow 2s ease-in-out 9.3s both; }
+    @keyframes glow {
+      0%   { filter: drop-shadow(0 0 0 rgba(245,197,66,0)); }
+      50%  { filter: drop-shadow(0 0 16px rgba(245,197,66,0.45)); }
+      100% { filter: drop-shadow(0 0 8px rgba(245,197,66,0.2)); }
+    }
+    .sweep { animation: sweep 1.8s ease-in-out 9.5s both; }
+    @keyframes sweep {
+      0%   { opacity: 0; transform: translateX(0); }
+      15%  { opacity: 1; }
+      100% { opacity: 0; transform: translateX(1600px); }
+    }
+
+    /* Users who ask for reduced motion see the finished logo immediately */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; }
+    }
+  </style>
+
+  <rect width="1080" height="1080" rx="48" fill="#031B3E"/>
+
+  <g class="finish">
+
+    <!-- 1. Open book -->
+    <g class="book-left">
+      <path d="M272 262 Q480 196 712 150 L712 398 Q700 318 630 280 Q500 236 288 296 Z" fill="url(#gold)"/>
+      <path d="M282 290 L282 612 Q400 600 506 622" fill="none" stroke="url(#gold)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g class="book-right" fill="none" stroke="url(#gold)" stroke-width="18" stroke-linecap="round">
+      <path d="M744 205 L744 560"/>
+      <path d="M800 245 L800 618"/>
+      <path d="M514 618 Q630 548 744 528"/>
+      <path d="M530 636 Q670 592 800 604"/>
+    </g>
+
+    <!-- 2. Scales of justice -->
+    <g id="scales">
+      <path class="draw" pathLength="1" style="animation-delay:1.9s" d="M500 316 L500 520" fill="none" stroke="url(#gold)" stroke-width="18" stroke-linecap="round"/>
+      <path class="draw" pathLength="1" style="animation-delay:2.4s" d="M446 540 L554 540" fill="none" stroke="url(#gold)" stroke-width="22" stroke-linecap="round"/>
+      <circle class="fade" style="animation-delay:2.2s" cx="500" cy="300" r="15" fill="url(#gold)"/>
+      <g class="balance">
+        <path class="draw" pathLength="1" style="animation-delay:2.6s" d="M390 346 Q500 322 610 346" fill="none" stroke="url(#gold)" stroke-width="14" stroke-linecap="round"/>
+        <circle class="fade" style="animation-delay:2.8s" cx="390" cy="346" r="11" fill="url(#gold)"/>
+        <circle class="fade" style="animation-delay:2.8s" cx="610" cy="346" r="11" fill="url(#gold)"/>
+        <path class="draw" pathLength="1" style="animation-delay:3.1s" d="M390 346 L345 466 M390 346 L450 466 M610 346 L555 466 M610 346 L655 466" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+        <path class="fade" style="animation-delay:3.5s" d="M345 466 L450 466 Q448 504 397.5 504 Q347 504 345 466 Z" fill="url(#gold)"/>
+        <path class="fade" style="animation-delay:3.6s" d="M555 466 L655 466 Q653 504 605 504 Q557 504 555 466 Z" fill="url(#gold)"/>
+      </g>
+    </g>
+
+    <!-- 3. Amharic name: ነጋሪት (Centered at x=540) -->
+    <g font-family="'Noto Sans Ethiopic', 'Nyala', 'Kefa', 'Abyssinica SIL', sans-serif" font-size="150" font-weight="700" fill="url(#gold)" text-anchor="middle">
+      <text class="glyph" style="animation-delay:6.4s" x="360" y="800">ነ</text>
+      <text class="glyph" style="animation-delay:6.7s" x="480" y="800">ጋ</text>
+      <text class="glyph" style="animation-delay:7.0s" x="600" y="800">ሪ</text>
+      <text class="glyph" style="animation-delay:7.3s" x="720" y="800">ት</text>
+    </g>
+
+    <!-- 4. English name: Negarit (Centered at x=540) -->
+    <g font-family="'Helvetica Neue', Arial, 'Liberation Sans', sans-serif" font-size="85" font-weight="700" fill="url(#gold)" text-anchor="middle">
+      <text class="letter" style="animation-delay:7.90s" x="352" y="895">N</text>
+      <text class="letter" style="animation-delay:8.02s" x="430" y="895">e</text>
+      <text class="letter" style="animation-delay:8.14s" x="504" y="895">g</text>
+      <text class="letter" style="animation-delay:8.26s" x="578" y="895">a</text>
+      <text class="letter" style="animation-delay:8.38s" x="642" y="895">r</text>
+      <text class="letter" style="animation-delay:8.50s" x="694" y="895">i</text>
+      <text class="letter" style="animation-delay:8.62s" x="744" y="895">t</text>
+    </g>
+
+  </g>
+
+  <!-- Single light sweep across the finished logo -->
+  <rect class="sweep" x="-420" y="0" width="420" height="1080" fill="url(#sweep)"/>
+</svg>

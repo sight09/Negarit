@@ -46,7 +46,7 @@ services:
       - app_node_modules:/app/node_modules
       - upload_data:/app/data/uploads
     command: >
-      sh -c "if [ ! -x node_modules/.bin/next ]; then npm ci; fi &&
+      sh -c "npm ci &&
              npx drizzle-kit push --force &&
              npm run build &&
              npm run start"

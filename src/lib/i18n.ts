@@ -1,8 +1,8 @@
 export type UiLang = "en" | "am";
 
 const en = {
-  appTitle: "Ethiopian Legal RAG",
-  appTitleAm: "የኢትዮጵያ ሕግ ምርምር",
+  appTitle: "Negarit",
+  appTitleAm: "ነጋሪት",
   tagline: "Bilingual legal research grounded in official gazette sources",
   navResearch: "Research Console",
   navAdmin: "Admin / Corpus",
@@ -68,8 +68,8 @@ const en = {
 };
 
 const am: typeof en = {
-  appTitle: "የኢትዮጵያ ሕግ AI",
-  appTitleAm: "Ethiopian Legal RAG",
+  appTitle: "ነጋሪት",
+  appTitleAm: "Negarit",
   tagline: "ባለሁለት ቋንቋ የሕግ ምርምር ከኦፊሴላዊ ጋዜጣ ምንጮች",
   navResearch: "የምርምር ገጽ",
   navAdmin: "አድሚን / ኮርፐስ",

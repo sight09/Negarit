@@ -1,52 +1,186 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   AlertTriangle,
   ArrowRight,
+  BarChart3,
+  BookOpen,
   BookOpenText,
+  Briefcase,
   ChevronDown,
   Database,
   ExternalLink,
   FileText,
-  Gavel,
-  History,
+  Home,
   Info,
+  Landmark,
   Languages,
   Library,
-  Scale,
+  Lightbulb,
+  Lock,
+  Menu,
+  Receipt,
+  RotateCcw,
   Search,
-  SlidersHorizontal,
+  Shield,
+  Star,
   X,
+  Check,
+  Scale,
+  ShieldCheck,
+  Zap,
 } from "lucide-react";
 import { getHealth, getSource, postChat, type ChatFilters } from "@/lib/api";
 import type { ChatResponse, HealthStatus, SourceCard, SourceDetail } from "@/lib/types";
 import { t, type UiLang } from "@/lib/i18n";
-import { Button, Card, ConfidenceBadge, LangBadge, Select, Spinner, StatusChip, cn } from "./ui";
+import { Card, ConfidenceBadge, LangBadge, Spinner, StatusChip, cn } from "./ui";
+import { Sidebar } from "./sidebar";
 
-const CATEGORIES = [
-  "constitution","civil","criminal","criminal_procedure","commercial","business","labor",
-  "family","land","property","tax","customs","banking","finance","insurance","investment",
-  "startup","technology","cybersecurity","data_protection","telecommunications",
-  "intellectual_property","environment","health","education","agriculture","mining",
-  "energy","transport","procurement","public_finance","administrative","elections",
-  "human_rights","immigration","citizenship","treaties","other",
-];
 const JURISDICTIONS = [
-  "federal","oromia","amhara","tigray","somali","afar","sidama","benishangul_gumuz",
-  "gambela","harari","snnpr","south_west","central_ethiopia","dire_dawa","addis_ababa",
+  "federal",
+  "oromia",
+  "amhara",
+  "tigray",
+  "somali",
+  "afar",
+  "sidama",
+  "benishangul_gumuz",
+  "gambela",
+  "harari",
+  "snnpr",
+  "south_west",
+  "central_ethiopia",
+  "dire_dawa",
+  "addis_ababa",
 ];
-const STATUSES = ["IN_FORCE","AMENDED","REPEALED","SUPERSEDED","HISTORICAL","UNKNOWN"];
-const DOC_TYPES = ["constitution","proclamation","regulation","directive","code","treaty","other"];
 
-const SAMPLE_AREAS: { key: string; en: string; am: string }[] = [
-  { key: "labor", en: "What are the rights of an employee when an employment contract is terminated?", am: "የስራ ስምሪት ውል ሲቋረጥ የሰራተኛው መብቶች ምንድን ናቸው?" },
-  { key: "startup", en: "What is the Ethiopian Startup Proclamation?", am: "የኢትዮጵያ የስታርታፕ አዋጅ ምንድነው?" },
-  { key: "data_protection", en: "Which law regulates personal data protection in Ethiopia?", am: "የግል መረጃ ጥበቃን የሚቆጣጠረው ሕግ የትኛው ነው?" },
-  { key: "land", en: "What is the current law regarding rural land administration?", am: "ስለ ገጠር መሬት አስተዳደር ወቅታዊው ሕግ ምንድነው?" },
-  { key: "commercial", en: "What does the Commercial Code say about companies?", am: "የንግድ ሕግ ስለ ኩባኒያዎች ምን ይላል?" },
-  { key: "investment", en: "What are the requirements for foreign investment registration?", am: "ለውጭ ኢንቬስትመንት ምዝገባ ምን ምን መስፈርቶች አሉ?" },
+const STATUSES = ["IN_FORCE", "AMENDED", "REPEALED", "SUPERSEDED", "HISTORICAL", "UNKNOWN"];
+
+const STATUS_LABELS: Record<string, string> = {
+  IN_FORCE: "In Force",
+  AMENDED: "Amended",
+  REPEALED: "Repealed",
+  SUPERSEDED: "Superseded",
+  HISTORICAL: "Historical",
+  UNKNOWN: "Unknown",
+};
+
+const LEGAL_AREAS = [
+  {
+    key: "labor",
+    icon: Briefcase,
+    titleEn: "Labor Law",
+    titleAm: "የሰራተኛ ሕግ",
+    descEn: "Employment, contracts & wages",
+    descAm: "የስራ ስምሪትና ደመወዝ",
+    queryEn: "What are the rights of an employee when an employment contract is terminated?",
+    queryAm: "የስራ ስምሪት ውል ሲቋረጥ የሰራተኛው መብቶች ምንድን ናቸው?",
+  },
+  {
+    key: "startup",
+    icon: Star,
+    titleEn: "Startup Proclamation",
+    titleAm: "የስታርታፕ አዋጅ",
+    descEn: "Proclamation No. 1396/2025 incentives",
+    descAm: "አዋጅ ቁጥር 1396/2025",
+    queryEn: "What is the Ethiopian Startup Proclamation No. 1396/2025?",
+    queryAm: "የኢትዮጵያ የስታርታፕ አዋጅ ቁጥር 1396/2025 ምንድነው?",
+  },
+  {
+    key: "data_protection",
+    icon: Shield,
+    titleEn: "Data Protection",
+    titleAm: "የመረጃ ጥበቃ",
+    descEn: "Personal data, rights & privacy",
+    descAm: "የግል መረጃ ጥበቃና ደህንነት",
+    queryEn: "Which law regulates personal data protection in Ethiopia?",
+    queryAm: "የግል መረጃ ጥበቃን የሚቆጣጠረው ሕግ የትኛው ነው?",
+  },
+  {
+    key: "land",
+    icon: Home,
+    titleEn: "Land Administration",
+    titleAm: "የመሬት ሕግ",
+    descEn: "Ownership, leases & rural tenure",
+    descAm: "የገጠርና የከተማ መሬት ይዞታ",
+    queryEn: "What is the current law regarding rural land administration in Ethiopia?",
+    queryAm: "ስለ ገጠር መሬት አስተዳደር ወቅታዊው ሕግ ምንድነው?",
+  },
+  {
+    key: "commercial",
+    icon: BookOpen,
+    titleEn: "Commercial Code",
+    titleAm: "የንግድ ሕግ",
+    descEn: "Business formation & trade contracts",
+    descAm: "የንግድ ድርጅቶችና ውሎች",
+    queryEn: "What does the Commercial Code say about company formation and liability?",
+    queryAm: "የንግድ ሕጉ ስለ ኩባንያ ምስረታ ምን ይላል?",
+  },
+  {
+    key: "investment",
+    icon: BarChart3,
+    titleEn: "Investment Law",
+    titleAm: "የኢንቨስትመንት ሕግ",
+    descEn: "Foreign capital & incentives",
+    descAm: "የውጭና የአገር ውስጥ ኢንቨስትመንት",
+    queryEn: "What are the requirements for foreign investment registration in Ethiopia?",
+    queryAm: "ለውጭ ኢንቬስትመንት ምዝገባ ምን ምን መስፈርቶች አሉ?",
+  },
+  {
+    key: "banking",
+    icon: Landmark,
+    titleEn: "Banking & Finance",
+    titleAm: "የባንክና ፋይናንስ",
+    descEn: "NBE directives, credit & forex",
+    descAm: "የብሔራዊ ባንክ መመሪያዎች",
+    queryEn: "What are the legal requirements for commercial bank operations in Ethiopia?",
+    queryAm: "የኢትዮጵያ ንግድ ባንኮች የሕግ ማዕቀፍ እና የብሔራዊ ባንክ መመሪያዎች ምንድን ናቸው?",
+  },
+  {
+    key: "tax",
+    icon: Receipt,
+    titleEn: "Tax & Customs",
+    titleAm: "የግብርና ጉምሩክ",
+    descEn: "VAT, duties & corporate income tax",
+    descAm: "የገቢ ግብርና ጉምሩክ ታሪፍ",
+    queryEn: "What are the corporate income tax rates under Ethiopian tax proclamation?",
+    queryAm: "በኢትዮጵያ የገቢ ግብር አዋጅ መሰረት የንግድ ድርጅቶች የግብር መጠን ስንት ነው?",
+  },
+  {
+    key: "cybersecurity",
+    icon: Lock,
+    titleEn: "Cybersecurity",
+    titleAm: "የሳይበር ደህንነት",
+    descEn: "Computer crimes & digital law",
+    descAm: "የኮምፒውተር ወንጀልና ኤሌክትሮኒክ ግብይት",
+    queryEn: "What acts constitute computer crimes under Ethiopian law?",
+    queryAm: "በኢትዮጵያ የኮምፒውተር ወንጀል አዋጅ መሰረት ወንጀል ተብለው የተከለከሉት ምንድናቸው?",
+  },
+  {
+    key: "intellectual_property",
+    icon: Lightbulb,
+    titleEn: "Intellectual Property",
+    titleAm: "የአእምሯዊ ንብረት",
+    descEn: "Patents, trademarks & copyright",
+    descAm: "የፈጠራ መብትና የንግድ ምልክት",
+    queryEn: "How are trademarks and patents registered and protected in Ethiopia?",
+    queryAm: "በኢትዮጵያ የንግድ ምልክትና የፓተንት ምዝገባ ሥነ ሥርዓት እንዴት ይከናወናል?",
+  },
+];
+
+const DEFAULT_RECENT = [
+  { text: "What is the Ethiopian Startup Proclamation?", time: "Yesterday" },
+  { text: "Labor notice period under Ethiopian law", time: "2 days ago" },
+  { text: "Commercial Code regulations on share companies", time: "3 days ago" },
+];
+
+const TRY_SUGGESTIONS = [
+  { text: "Startup Proclamation 1396/2025", q: "What is Startup Proclamation 1396/2025?" },
+  { text: "Notice period for termination", q: "What is the legal notice period for employment termination?" },
+  { text: "የሥራ ውል", q: "የሥራ ውል ማቋረጥ ሕጋዊ ሥነ ሥርዓት ምንድነው?" },
 ];
 
 /** Minimal legal-markdown renderer (bold, blockquote, headings, lists, hr). */
@@ -54,6 +188,7 @@ function renderMd(text: string, ethiopic: boolean): ReactNode {
   const lines = text.split("\n");
   const out: ReactNode[] = [];
   let list: string[] = [];
+
   const inline = (s: string, k: string): ReactNode => {
     const parts = s.split(/(\*\*[^*]+\*\*)/g);
     return parts.map((p, i) =>
@@ -64,6 +199,7 @@ function renderMd(text: string, ethiopic: boolean): ReactNode {
       ),
     );
   };
+
   const flushList = (key: string) => {
     if (list.length) {
       out.push(
@@ -76,6 +212,7 @@ function renderMd(text: string, ethiopic: boolean): ReactNode {
       list = [];
     }
   };
+
   lines.forEach((raw, idx) => {
     const line = raw.trimEnd();
     if (!line.trim()) {
@@ -97,7 +234,11 @@ function renderMd(text: string, ethiopic: boolean): ReactNode {
       out.push(<h4 key={idx}>{inline(line.replace(/^#{2,4}\s+/, ""), `h${idx}`)}</h4>);
       return;
     }
-    if (/^(Issue|Applicable law|Relevant provisions|Explanation|Related provisions|Comparison|Summary|Current law|Historical law)[:\s]/i.test(line)) {
+    if (
+      /^(Issue|Applicable law|Relevant provisions|Explanation|Related provisions|Comparison|Summary|Current law|Historical law)[:\s]/i.test(
+        line,
+      )
+    ) {
       flushList(`ul-${idx}`);
       out.push(<h4 key={idx}>{inline(line.replace(/:$/, ""), `h${idx}`)}</h4>);
       return;
@@ -110,7 +251,7 @@ function renderMd(text: string, ethiopic: boolean): ReactNode {
     out.push(<p key={idx}>{inline(line, `p${idx}`)}</p>);
   });
   flushList("ul-end");
-  return <div className={cn("answer-md text-[15px] text-ink-800", ethiopic && "ethiopic")}>{out}</div>;
+  return <div className={cn("answer-md text-[14.5px] text-ink-900 leading-relaxed", ethiopic && "ethiopic")}>{out}</div>;
 }
 
 function SourceSheet({
@@ -139,26 +280,30 @@ function SourceSheet({
   const isAm = active?.language === "am";
 
   return (
-    <div className="fixed inset-0 z-40 flex justify-end bg-ink-950/40 backdrop-blur-[2px]" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex justify-end bg-ink-950/45 backdrop-blur-[2px]" onClick={onClose}>
       <aside
-        className="flex h-full w-full max-w-xl flex-col border-l border-ink-200 bg-paper-50 shadow-2xl animate-rise"
+        className="flex h-full w-full max-w-xl flex-col border-l border-ink-200 bg-white shadow-2xl animate-rise"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between gap-3 border-b hairline bg-ink-900 px-5 py-4 text-paper-50">
+        <div className="flex items-start justify-between gap-3 border-b hairline bg-[#0e1726] px-5 py-4 text-white">
           <div className="min-w-0">
-            <p className="label-caps !text-brass-300">{t(uiLang, "sourceViewer")}</p>
-            <h3 className="font-display mt-1 truncate text-lg font-semibold">
+            <p className="label-caps !text-[#deb152]">{t(uiLang, "sourceViewer")}</p>
+            <h3 className="font-display mt-1 truncate text-lg font-semibold text-white">
               {detail?.document?.title ?? "…"}
             </h3>
             <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[11px] text-paper-200/80">
               {detail?.document?.proclamationNumber && (
-                <span className="rounded bg-ink-700 px-1.5 py-0.5">№ {detail.document.proclamationNumber}</span>
+                <span className="rounded bg-ink-800 px-1.5 py-0.5">№ {detail.document.proclamationNumber}</span>
               )}
               {detail?.document && <StatusChip status={detail.document.status} />}
               {active && <LangBadge language={active.language} />}
             </div>
           </div>
-          <button onClick={onClose} aria-label={t(uiLang, "close")} className="rounded-md p-1.5 text-paper-200 transition hover:bg-ink-700">
+          <button
+            onClick={onClose}
+            aria-label={t(uiLang, "close")}
+            className="rounded-md p-1.5 text-paper-200 transition hover:bg-ink-800"
+          >
             <X className="size-4" />
           </button>
         </div>
@@ -172,24 +317,44 @@ function SourceSheet({
           {!detail && !error && <div className="shimmer h-64 rounded-xl" />}
           {detail && active && (
             <>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg border hairline bg-white/60 p-3 text-[12.5px] sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-xl border border-ink-100 bg-paper-50 p-3.5 text-[12px] sm:grid-cols-3">
                 {active.articleNumber && (
-                  <div><p className="label-caps">{t(uiLang, "article")}</p><p className="num font-semibold">{active.articleNumber}</p></div>
+                  <div>
+                    <p className="label-caps">{t(uiLang, "article")}</p>
+                    <p className="num font-semibold">{active.articleNumber}</p>
+                  </div>
                 )}
                 {active.page != null && (
-                  <div><p className="label-caps">{t(uiLang, "page")}</p><p className="num font-semibold">{active.page}</p></div>
+                  <div>
+                    <p className="label-caps">{t(uiLang, "page")}</p>
+                    <p className="num font-semibold">{active.page}</p>
+                  </div>
                 )}
-                <div><p className="label-caps">{t(uiLang, "jurisdiction")}</p><p className="font-semibold capitalize">{detail.document?.jurisdiction}</p></div>
-                <div><p className="label-caps">{t(uiLang, "category")}</p><p className="font-semibold capitalize">{detail.document?.category.replace(/_/g, " ")}</p></div>
-                <div><p className="label-caps">{t(uiLang, "extraction")}</p><p className="font-semibold">{active.extractionMethod ?? "—"}</p></div>
+                <div>
+                  <p className="label-caps">{t(uiLang, "jurisdiction")}</p>
+                  <p className="font-semibold capitalize">{detail.document?.jurisdiction}</p>
+                </div>
+                <div>
+                  <p className="label-caps">{t(uiLang, "category")}</p>
+                  <p className="font-semibold capitalize">{detail.document?.category.replace(/_/g, " ")}</p>
+                </div>
+                <div>
+                  <p className="label-caps">{t(uiLang, "extraction")}</p>
+                  <p className="font-semibold">{active.extractionMethod ?? "—"}</p>
+                </div>
                 {detail.document?.publicationDate && (
-                  <div><p className="label-caps">{t(uiLang, "published")}</p><p className="num font-semibold">{detail.document.publicationDate}</p></div>
+                  <div>
+                    <p className="label-caps">{t(uiLang, "published")}</p>
+                    <p className="num font-semibold">{detail.document.publicationDate}</p>
+                  </div>
                 )}
                 {(detail.document?.gazetteName || detail.document?.gazetteNumber) && (
                   <div className="col-span-2">
                     <p className="label-caps">{t(uiLang, "source")}</p>
                     <p className="font-semibold">
-                      {[detail.document.gazetteName, detail.document.gazetteNumber && `№ ${detail.document.gazetteNumber}`].filter(Boolean).join(" — ") || detail.document.source || "—"}
+                      {[detail.document.gazetteName, detail.document.gazetteNumber && `№ ${detail.document.gazetteNumber}`]
+                        .filter(Boolean)
+                        .join(" — ") || detail.document.source || "—"}
                     </p>
                   </div>
                 )}
@@ -198,16 +363,25 @@ function SourceSheet({
               {detail.pair && (
                 <button
                   onClick={() => setShowPair((v) => !v)}
-                  className="mt-3 inline-flex items-center gap-2 rounded-lg border border-brass-500/40 bg-brass-100/60 px-3 py-1.5 text-[12px] font-medium text-brass-700 transition hover:bg-brass-100"
+                  className="mt-3.5 inline-flex items-center gap-2 rounded-lg border border-[#deb152]/50 bg-[#fbf5e7] px-3.5 py-1.5 text-[12px] font-semibold text-[#8a6527] transition hover:bg-[#f6ebd1]"
                 >
                   <Languages className="size-3.5" />
                   {showPair
-                    ? active.language === "am" ? "Show English version" : "በአማርኛ አሳይ"
-                    : detail.pair.language === "am" ? "የአማርኛ ስሪት አሳይ (Amharic)" : "Show English version (English)"}
+                    ? active.language === "am"
+                      ? "Show English version"
+                      : "በአማርኛ አሳይ"
+                    : detail.pair.language === "am"
+                      ? "የአማርኛ ስሪት አሳይ (Amharic)"
+                      : "Show English version (English)"}
                 </button>
               )}
 
-              <div className={cn("mt-4 whitespace-pre-wrap rounded-lg border hairline bg-white/70 p-4 text-[13.5px] leading-relaxed text-ink-800", isAm && "ethiopic text-[14px]")}>
+              <div
+                className={cn(
+                  "mt-4 whitespace-pre-wrap rounded-xl border border-ink-100 bg-[#fbf9f4] p-4 text-[13.5px] leading-relaxed text-ink-900",
+                  isAm && "ethiopic text-[14.5px]",
+                )}
+              >
                 {active.text}
               </div>
 
@@ -221,7 +395,7 @@ function SourceSheet({
         </div>
 
         {detail?.document && (
-          <div className="flex items-center justify-between gap-3 border-t hairline bg-paper-100 px-5 py-3">
+          <div className="flex items-center justify-between gap-3 border-t border-ink-100 bg-paper-50 px-5 py-3">
             <div className="text-[11px] text-ink-500">
               {detail.document.source && <span className="mr-2">{detail.document.source}</span>}
               <span className="rounded bg-ink-100 px-1.5 py-0.5 font-semibold text-ink-600">
@@ -230,7 +404,12 @@ function SourceSheet({
             </div>
             <div className="flex items-center gap-2">
               {detail.document.sourceUrl && (
-                <a href={detail.document.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[12px] font-medium text-brass-600 hover:underline">
+                <a
+                  href={detail.document.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-[12px] font-medium text-[#b88c32] hover:underline"
+                >
                   {t(uiLang, "source")} <ExternalLink className="size-3" />
                 </a>
               )}
@@ -238,7 +417,7 @@ function SourceSheet({
                 href={`/api/documents/${detail.document.id}/pdf${active?.page ? `#page=${active.page}` : ""}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-ink-900 px-3 py-1.5 text-[12px] font-medium text-paper-50 transition hover:bg-ink-700"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#0e1726] px-3.5 py-1.5 text-[12px] font-medium text-white transition hover:bg-ink-800"
               >
                 <FileText className="size-3.5" /> {t(uiLang, "viewPdf")}
               </a>
@@ -254,15 +433,42 @@ export default function ResearchConsole() {
   const [uiLang, setUiLang] = useState<UiLang>("en");
   const [question, setQuestion] = useState("");
   const [mode, setMode] = useState<"quick" | "research" | "compare">("research");
-  const [filters, setFilters] = useState<ChatFilters>({});
-  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState<ChatFilters>({ jurisdiction: "federal", status: "IN_FORCE" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<ChatResponse | null>(null);
   const [sessionId, setSessionId] = useState<string | undefined>();
-  const [recent, setRecent] = useState<string[]>([]);
+  const [recent, setRecent] = useState<{ text: string; time: string }[]>(DEFAULT_RECENT);
   const [health, setHealth] = useState<HealthStatus | null>(null);
   const [activeChunk, setActiveChunk] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("elr-sidebar-collapsed");
+      if (saved !== null) {
+        setSidebarCollapsed(saved === "true");
+      }
+    } catch {
+      // default is false (showing sidebar)
+    }
+  }, []);
+
+  const toggleSidebarCollapsed = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem("elr-sidebar-collapsed", String(next));
+      return next;
+    });
+  };
+
+  // Dropdown states for filter pills
+  const [showJurisdictionMenu, setShowJurisdictionMenu] = useState(false);
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
+
+  const jurRef = useRef<HTMLDivElement>(null);
+  const statusRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const lang = localStorage.getItem("elr-lang");
@@ -270,11 +476,28 @@ export default function ResearchConsole() {
     const sid = localStorage.getItem("elr-session");
     if (sid) setSessionId(sid);
     try {
-      setRecent(JSON.parse(localStorage.getItem("elr-recent") ?? "[]"));
+      const stored = JSON.parse(localStorage.getItem("elr-recent-v2") ?? "null");
+      if (Array.isArray(stored) && stored.length > 0) setRecent(stored);
     } catch {
-      setRecent([]);
+      // keep default
     }
-    getHealth().then(setHealth).catch(() => setHealth(null));
+    getHealth()
+      .then(setHealth)
+      .catch(() => setHealth(null));
+  }, []);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (jurRef.current && !jurRef.current.contains(e.target as Node)) {
+        setShowJurisdictionMenu(false);
+      }
+      if (statusRef.current && !statusRef.current.contains(e.target as Node)) {
+        setShowStatusMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const switchLang = (lang: UiLang) => {
@@ -301,8 +524,9 @@ export default function ResearchConsole() {
         setSessionId(res.sessionId);
         localStorage.setItem("elr-session", res.sessionId);
         setRecent((prev) => {
-          const next = [text, ...prev.filter((r) => r !== text)].slice(0, 8);
-          localStorage.setItem("elr-recent", JSON.stringify(next));
+          const filtered = prev.filter((r) => r.text !== text);
+          const next = [{ text, time: "Just now" }, ...filtered].slice(0, 8);
+          localStorage.setItem("elr-recent-v2", JSON.stringify(next));
           return next;
         });
       } catch (err) {
@@ -311,377 +535,587 @@ export default function ResearchConsole() {
         setLoading(false);
       }
     },
-    [question, loading, sessionId, mode, filters],
+    [filters, loading, mode, question, sessionId],
   );
 
-  const activeFilterCount = useMemo(
-    () => Object.values(filters).filter((v) => v && v !== "any").length,
-    [filters],
-  );
-  const corpusEmpty = health !== null && health.stats.documents === 0;
-  const answerIsAm = response?.language === "am";
-
-  const filterSelect = (key: keyof ChatFilters, label: string, options: string[]) => (
-    <div key={key} className="min-w-32 flex-1 sm:flex-none sm:w-40">
-      <p className="label-caps mb-1">{label}</p>
-      <Select
-        ariaLabel={label}
-        value={filters[key] ?? "any"}
-        onChange={(v) => setFilters((f) => ({ ...f, [key]: v === "any" ? undefined : v }))}
-        options={[
-          { value: "any", label: t(uiLang, "any") },
-          ...options.map((o) => ({ value: o, label: o.replace(/_/g, " ") })),
-        ]}
-      />
-    </div>
-  );
+  const answerIsAm = useMemo(() => {
+    if (!response?.answer) return uiLang === "am";
+    return response.language === "am" || /[ሀ-፞]/.test(response.answer);
+  }, [response, uiLang]);
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 pb-16 sm:px-6">
-      {/* ── Top bar ─────────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between gap-4 border-b hairline py-4">
-        <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-lg bg-ink-900 text-brass-300 shadow-inner">
-            <Scale className="size-5" />
-          </div>
-          <div>
-            <h1 className="font-display text-lg font-bold leading-tight tracking-tight">
-              {uiLang === "am" ? t("am", "appTitle") : t("en", "appTitle")}
-              <span className="ethiopic ml-2 font-normal text-ink-500">የኢትዮጵያ ሕግ</span>
-            </h1>
-            <p className="text-[11.5px] text-ink-500">{t(uiLang, "tagline")}</p>
-          </div>
-        </div>
-        <nav className="flex items-center gap-2">
-          <button
-            onClick={() => switchLang(uiLang === "am" ? "en" : "am")}
-            className="flex items-center gap-1.5 rounded-lg border border-ink-200 bg-paper-50 px-3 py-1.5 text-[12.5px] font-semibold text-ink-700 transition hover:border-brass-500/60"
-          >
-            <Languages className="size-3.5" />
-            <span className={uiLang === "am" ? "" : "ethiopic"}>{uiLang === "am" ? "English" : "አማርኛ"}</span>
-          </button>
-          <Link
-            href="/admin"
-            className="flex items-center gap-1.5 rounded-lg border border-ink-200 bg-paper-50 px-3 py-1.5 text-[12.5px] font-medium text-ink-600 transition hover:border-brass-500/60"
-          >
-            <Database className="size-3.5" /> {t(uiLang, "navAdmin")}
-          </Link>
-        </nav>
-      </header>
+    <div className="flex min-h-screen bg-[#f7f4ed] text-ink-900 font-sans">
+      {/* ── Left Sidebar (Dark Navy & Collapsible) ────────────────────────── */}
+      <Sidebar
+        activeItem={mode}
+        onSelectMode={(m) => setMode(m)}
+        recentSearches={recent}
+        onSelectRecent={(text) => {
+          setQuestion(text);
+          void ask(text);
+        }}
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={toggleSidebarCollapsed}
+        mobileOpen={mobileMenuOpen}
+        onMobileClose={() => setMobileMenuOpen(false)}
+      />
 
-      {/* ── Ask hero ────────────────────────────────────────────────── */}
-      <section className="mt-8">
-        <div className="rule-double mb-6" />
-        <h2 className="font-display text-center text-2xl font-semibold tracking-tight text-ink-900 sm:text-3xl">
-          {uiLang === "am" ? "ስለ ኢትዮጵያ ሕግ ምን ማወቅ ይፈልጋሉ?" : "Research Ethiopian law with grounded citations"}
-        </h2>
-        <p className={cn("mx-auto mt-2 max-w-2xl text-center text-[13.5px] text-ink-500", uiLang === "am" && "ethiopic")}>
-          {t(uiLang, "emptyBody")}
-        </p>
-
-        <Card className="mx-auto mt-6 max-w-3xl p-4 sm:p-5">
-          <div className="flex flex-col gap-3">
-            <textarea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  void ask();
-                }
-              }}
-              rows={2}
-              placeholder={uiLang === "am" ? t("am", "askPlaceholder") : t("en", "askPlaceholder")}
-              className={cn(
-                "w-full resize-none rounded-lg border border-ink-200 bg-white/80 px-3.5 py-2.5 text-[15px] text-ink-900 outline-none transition placeholder:text-ink-400 focus:border-brass-500 focus:ring-2 focus:ring-brass-300/40",
-                uiLang === "am" && "ethiopic",
-              )}
-            />
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex overflow-hidden rounded-lg border border-ink-200">
-                {(["quick", "research", "compare"] as const).map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => setMode(m)}
-                    className={cn(
-                      "px-3 py-1.5 text-[12px] font-semibold transition",
-                      mode === m ? "bg-ink-900 text-paper-50" : "bg-paper-50 text-ink-500 hover:bg-ink-100/60",
-                    )}
-                  >
-                    {m === "quick" ? t(uiLang, "quick") : m === "research" ? t(uiLang, "research") : t(uiLang, "compare")}
-                  </button>
-                ))}
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowFilters((v) => !v)}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-medium transition",
-                    showFilters || activeFilterCount > 0
-                      ? "border-brass-500/50 bg-brass-100/60 text-brass-700"
-                      : "border-ink-200 text-ink-600 hover:bg-ink-100/60",
-                  )}
-                >
-                  <SlidersHorizontal className="size-3.5" />
-                  {t(uiLang, "filters")}
-                  {activeFilterCount > 0 && (
-                    <span className="rounded-full bg-brass-500 px-1.5 text-[10px] font-bold text-white">{activeFilterCount}</span>
-                  )}
-                  <ChevronDown className={cn("size-3 transition-transform", showFilters && "rotate-180")} />
-                </button>
-                <Button onClick={() => void ask()} disabled={loading || !question.trim()}>
-                  {loading ? <Spinner /> : <Search className="size-4" />}
-                  {loading ? t(uiLang, "asking") : t(uiLang, "ask")}
-                </Button>
-              </div>
-            </div>
-          </div>
-          {showFilters && (
-            <div className="mt-4 animate-rise border-t hairline pt-4">
-              <div className="flex flex-wrap gap-3">
-                {filterSelect("language", t(uiLang, "fLanguage"), ["am", "en", "bilingual"])}
-                {filterSelect("jurisdiction", t(uiLang, "fJurisdiction"), JURISDICTIONS)}
-                {filterSelect("category", t(uiLang, "fCategory"), CATEGORIES)}
-                {filterSelect("status", t(uiLang, "fStatus"), STATUSES)}
-                {filterSelect("documentType", t(uiLang, "fDocType"), DOC_TYPES)}
-                <div className="w-28">
-                  <p className="label-caps mb-1">{t(uiLang, "fYear")}</p>
-                  <input
-                    value={filters.year ?? ""}
-                    onChange={(e) => setFilters((f) => ({ ...f, year: e.target.value || undefined }))}
-                    placeholder="2025"
-                    className="num w-full rounded-lg border border-ink-200 bg-paper-50 px-2.5 py-1.5 text-[13px] outline-none focus:border-brass-500"
-                  />
-                </div>
-                <div className="w-36">
-                  <p className="label-caps mb-1">{t(uiLang, "fProc")}</p>
-                  <input
-                    value={filters.proclamationNumber ?? ""}
-                    onChange={(e) => setFilters((f) => ({ ...f, proclamationNumber: e.target.value || undefined }))}
-                    placeholder="1396/2025"
-                    className="num w-full rounded-lg border border-ink-200 bg-paper-50 px-2.5 py-1.5 text-[13px] outline-none focus:border-brass-500"
-                  />
-                </div>
-                <div className="flex items-end">
-                  <Button variant="ghost" className="!px-2.5" onClick={() => setFilters({})}>
-                    {t(uiLang, "clear")}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-        </Card>
-
-        {/* Popular areas */}
-        <div className="mx-auto mt-5 max-w-3xl">
-          <p className="label-caps mb-2 text-center">{t(uiLang, "popular")}</p>
-          <div className="flex flex-wrap justify-center gap-2">
-            {SAMPLE_AREAS.map((area) => (
+      {/* ── Main Content Area ──────────────────────────────────────────────── */}
+      <main className="flex-1 min-w-0 px-5 py-6 sm:px-8 lg:px-12 overflow-y-auto">
+        <div className="mx-auto max-w-6xl">
+          {/* Top Bar: Breadcrumb + Language Toggle */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
               <button
-                key={area.key}
-                onClick={() => {
-                  setFilters((f) => ({ ...f, category: area.key }));
-                  setQuestion(uiLang === "am" ? area.am : area.en);
-                }}
-                className="group flex items-center gap-1.5 rounded-full border border-ink-200 bg-paper-50 px-3 py-1 text-[12px] text-ink-600 transition hover:border-brass-500/60 hover:text-ink-900"
+                onClick={() => setMobileMenuOpen(true)}
+                className="rounded-lg border border-[#ded5c2] p-1.5 text-ink-700 hover:bg-white md:hidden"
+                aria-label="Open sidebar"
               >
-                <Gavel className="size-3 text-brass-500" />
-                <span className="capitalize">{area.key.replace("_", " ")}</span>
-                <ArrowRight className="size-3 opacity-0 transition group-hover:opacity-100" />
+                <Menu className="size-5" />
               </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Corpus status / empty state ─────────────────────────────── */}
-      {corpusEmpty && !response && (
-        <Card className="mx-auto mt-10 max-w-3xl animate-rise border-dashed p-8 text-center">
-          <Library className="mx-auto size-10 text-brass-500" />
-          <h3 className="font-display mt-3 text-xl font-semibold">{t(uiLang, "corpusEmpty")}</h3>
-          <p className={cn("mx-auto mt-2 max-w-xl text-[13.5px] leading-relaxed text-ink-500", uiLang === "am" && "ethiopic")}>
-            {t(uiLang, "corpusEmptyBody")}
-          </p>
-          <Link href="/admin">
-            <Button className="mt-4">{t(uiLang, "goAdmin")}</Button>
-          </Link>
-          {health && (
-            <div className="mx-auto mt-6 flex max-w-md flex-wrap justify-center gap-2 text-[11px] text-ink-500">
-              <span className={cn("rounded-full border px-2 py-0.5", health.subsystems.database ? "border-jade-600/30 bg-jade-100 text-jade-600" : "border-clay-600/30 bg-clay-100 text-clay-600")}>
-                PostgreSQL {health.subsystems.database ? "connected" : "down"}
-              </span>
-              <span className="rounded-full border border-ink-200 bg-ink-50 px-2 py-0.5">Qdrant: {health.subsystems.qdrant.replace("_", " ")}</span>
-              <span className={cn("rounded-full border px-2 py-0.5", health.subsystems.embeddings === "configured" ? "border-jade-600/30 bg-jade-100 text-jade-600" : "border-gold-600/30 bg-gold-100 text-gold-600")}>
-                BGE-M3: {health.subsystems.embeddings === "configured" ? "configured" : "HF_TOKEN missing (BM25 mode)"}
-              </span>
-              <span className={cn("rounded-full border px-2 py-0.5", health.subsystems.llm === "configured" ? "border-jade-600/30 bg-jade-100 text-jade-600" : "border-gold-600/30 bg-gold-100 text-gold-600")}>
-                LLM: {health.subsystems.llm === "configured" ? "configured" : "not configured (extractive answers)"}
-              </span>
+              <nav className="text-xs text-ink-500 font-medium">
+                <span>Workspace</span>
+                <span className="mx-1.5 text-ink-400">›</span>
+                <span className="text-ink-900 font-semibold capitalize">
+                  {mode === "research" ? "Legal Research" : mode === "quick" ? "Quick Answer" : "Compare Laws"}
+                </span>
+              </nav>
             </div>
-          )}
-        </Card>
-      )}
 
-      {/* ── Loading skeleton ────────────────────────────────────────── */}
-      {loading && (
-        <div className="mx-auto mt-10 w-full max-w-3xl animate-rise">
-          <div className="shimmer h-6 w-52 rounded" />
-          <div className="shimmer mt-3 h-36 rounded-xl" />
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <div className="shimmer h-28 rounded-xl" />
-            <div className="shimmer h-28 rounded-xl" />
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div className="mx-auto mt-8 flex max-w-3xl items-center gap-2 rounded-xl border border-clay-600/30 bg-clay-100 p-4 text-sm text-clay-600">
-          <AlertTriangle className="size-4 shrink-0" /> {error}
-        </div>
-      )}
-
-      {/* ── Answer + sources ────────────────────────────────────────── */}
-      {response && !loading && (
-        <section key={response.sessionId + String(response.retrieval.latencyMs)} className="mx-auto mt-10 w-full max-w-3xl animate-rise">
-          <div className="flex flex-wrap items-center gap-2">
-            <ConfidenceBadge
-              level={response.confidence}
-              label={
-                response.confidence === "STRONG"
-                  ? t(uiLang, "strong")
-                  : response.confidence === "MODERATE"
-                    ? t(uiLang, "moderate")
-                    : t(uiLang, "insufficient")
-              }
-            />
-            <span className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[11px] font-medium text-ink-600">
-              {t(uiLang, "route")}: {response.route}
-            </span>
-            <span className="rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[11px] font-medium text-ink-600">
-              {response.mode === "quick" ? t(uiLang, "quick") : response.mode === "research" ? t(uiLang, "research") : t(uiLang, "compare")}
-            </span>
-            <span className="num ml-auto text-[11px] text-ink-400">
-              {response.retrieval.latencyMs}ms{response.retrieval.llmLatencyMs != null && ` · LLM ${response.retrieval.llmLatencyMs}ms`}
-            </span>
-          </div>
-
-          {response.notices.length > 0 && (
-            <div className="mt-3 space-y-1.5">
-              {response.notices.map((n, i) => (
-                <div key={i} className="flex items-start gap-2 rounded-lg border border-gold-600/25 bg-gold-100/70 px-3 py-2 text-[12px] text-gold-600">
-                  <Info className="mt-0.5 size-3.5 shrink-0" />
-                  <span className={cn(uiLang === "am" && "ethiopic")}>{n}</span>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {response.answer ? (
-            <Card className="mt-4 p-5 sm:p-6">
-              <p className="label-caps mb-3 flex items-center gap-1.5">
-                <BookOpenText className="size-3.5" /> {t(uiLang, "answer")}
-              </p>
-              {renderMd(response.answer, answerIsAm)}
-            </Card>
-          ) : (
-            <Card className="mt-4 border-dashed p-5 text-[13px] text-ink-500">
-              {t(uiLang, "noSources")}
-            </Card>
-          )}
-
-          {response.sources.length > 0 && (
-            <div className="mt-6">
-              <p className="label-caps mb-3 flex items-center gap-1.5">
-                <Library className="size-3.5" /> {t(uiLang, "sources")} · {response.sources.length}
-              </p>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {response.sources.map((s) => (
-                  <SourceCardView key={s.chunkId} source={s} uiLang={uiLang} onOpen={() => setActiveChunk(s.chunkId)} />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {response.relatedDocuments.length > 0 && (
-            <div className="mt-5">
-              <p className="label-caps mb-2">{t(uiLang, "relatedDocs")}</p>
-              <div className="flex flex-wrap gap-2">
-                {response.relatedDocuments.map((d) => (
-                  <span key={d.documentId} className="inline-flex items-center gap-2 rounded-lg border hairline bg-white/70 px-2.5 py-1.5 text-[12px] text-ink-700">
-                    <FileText className="size-3.5 text-brass-500" />
-                    {d.title}
-                    {d.proclamationNumber && <span className="num text-ink-400">№ {d.proclamationNumber}</span>}
-                    <StatusChip status={d.status} />
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <details className="mt-5 rounded-xl border hairline bg-white/50 px-4 py-3 text-[12px] text-ink-500">
-            <summary className="cursor-pointer font-semibold text-ink-600">{t(uiLang, "diagnostics")}</summary>
-            <div className="num mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              <div>vector: {response.retrieval.vectorResults}</div>
-              <div>BM25: {response.retrieval.keywordResults}</div>
-              <div>fused: {response.retrieval.fusedResults}</div>
-              <div>reranked: {response.retrieval.rerankedResults}</div>
-              <div>backend: {response.retrieval.vectorBackend}</div>
-              <div>dense: {response.retrieval.denseEnabled ? "on" : "off"}</div>
-              <div>top score: {response.retrieval.topScore}</div>
-              <div>lang: {response.retrieval.detectedLanguage}</div>
-            </div>
-            <div className="mt-2 space-y-0.5">
-              {response.retrieval.searchesPerformed.map((sp, i) => (
-                <p key={i} className="font-mono text-[10.5px] text-ink-400">{sp}</p>
-              ))}
-            </div>
-            {Object.keys(response.retrieval.filtersApplied).length > 0 && (
-              <p className="mt-1">filters: {JSON.stringify(response.retrieval.filtersApplied)}</p>
-            )}
-            <p className="mt-2 border-t hairline pt-2 text-[11px] italic">
-              confidence basis: {response.confidenceBasis} — confidence labels derive from retrieval scores and exact-metadata matching, never from model self-assessment.
-            </p>
-          </details>
-        </section>
-      )}
-
-      {/* ── Recent searches ─────────────────────────────────────────── */}
-      {recent.length > 0 && !loading && (
-        <div className="mx-auto mt-12 w-full max-w-3xl">
-          <p className="label-caps mb-2 flex items-center gap-1.5">
-            <History className="size-3.5" /> {t(uiLang, "recent")}
-          </p>
-          <div className="flex flex-col divide-y divide-ink-100 rounded-xl border hairline bg-white/60">
-            {recent.slice(0, 6).map((r) => (
+            {/* Language Pill Toggle */}
+            <div className="inline-flex items-center rounded-full border border-[#ded5c2] bg-[#eee7d8] p-1 shadow-2xs">
               <button
-                key={r}
-                onClick={() => {
-                  setQuestion(r);
-                  void ask(r);
-                }}
+                onClick={() => switchLang("en")}
                 className={cn(
-                  "flex items-center justify-between gap-3 px-4 py-2.5 text-left text-[13px] text-ink-700 transition hover:bg-brass-100/40",
-                  /[ሀ-፞]/.test(r) && "ethiopic",
+                  "rounded-full px-4 py-1 text-xs font-semibold transition-all",
+                  uiLang === "en"
+                    ? "bg-[#0d1625] text-white shadow-xs"
+                    : "text-ink-700 hover:text-ink-950",
                 )}
               >
-                <span className="truncate">{r}</span>
-                <ArrowRight className="size-3.5 shrink-0 text-ink-300" />
+                English
               </button>
-            ))}
+              <button
+                onClick={() => switchLang("am")}
+                className={cn(
+                  "ethiopic rounded-full px-4 py-1 text-xs font-medium transition-all",
+                  uiLang === "am"
+                    ? "bg-[#0d1625] text-white shadow-xs font-bold"
+                    : "text-ink-700 hover:text-ink-950",
+                )}
+              >
+                አማርኛ
+              </button>
+            </div>
           </div>
+
+          {/* Hero Heading */}
+          <div className="mt-8">
+            <h1 className="font-display font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-[#0c1626] leading-tight">
+              {uiLang === "am"
+                ? "የኢትዮጵያን ሕግ በታማኝ ምንጮች ይመርምሩ"
+                : "Research Ethiopian law with grounded citations"}
+            </h1>
+            <p className="mt-2.5 max-w-3xl text-sm leading-relaxed text-ink-600">
+              {uiLang === "am"
+                ? "ድብልቅ BGE-M3 እና BM25 ፍለጋ፣ በሕግ ሁኔታ እና ክልል የተጣራ፣ ከዚያም በአንቀጽ ደረጃ ማስረጃዎች የተደገፈ። በአማርኛ ወይም በእንግሊዝኛ ይጠይቁ።"
+                : "Hybrid BGE-M3 and BM25 retrieval, filtered by legal status and jurisdiction, then grounded in article-level citations. Ask in Amharic or English."}
+            </p>
+          </div>
+
+          {/* ── Search & Filter Box ────────────────────────────────────────── */}
+          <div className="mt-7 rounded-2xl border border-[#ded5c2] bg-white p-5 shadow-xs">
+            {/* Top Row: Mode Indicator + AI Model-Picker Style Dropdowns */}
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f0e9dc] pb-4">
+              {/* Left: Active Mode Indicator */}
+              <div className="flex items-center gap-2.5">
+                <div className="flex size-8 items-center justify-center rounded-xl bg-[#fbf5e7] border border-[#f0e3c5] text-[#b88c32] shadow-2xs">
+                  {mode === "research" ? (
+                    <Search className="size-4" />
+                  ) : mode === "quick" ? (
+                    <Zap className="size-4" />
+                  ) : (
+                    <Scale className="size-4" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-ink-950 leading-none">
+                    {mode === "research"
+                      ? "Legal Research"
+                      : mode === "quick"
+                        ? "Quick Answer"
+                        : "Compare Laws"}
+                  </p>
+                  <p className="text-[10.5px] text-ink-400 mt-0.5">
+                    {mode === "research"
+                      ? "Grounded provision retrieval"
+                      : mode === "quick"
+                        ? "Direct extractive answer"
+                        : "Statutory provision comparison"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Model-Picker Style Filter Selectors */}
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Jurisdiction Model-Picker */}
+                <div className="relative" ref={jurRef}>
+                  <button
+                    onClick={() => {
+                      setShowJurisdictionMenu((v) => !v);
+                      setShowStatusMenu(false);
+                    }}
+                    className={cn(
+                      "inline-flex items-center gap-2 rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all shadow-2xs cursor-pointer",
+                      filters.jurisdiction
+                        ? "border-[#deb152] bg-[#fdfaf3] text-ink-950 font-semibold"
+                        : "border-[#ded5c2] bg-white text-ink-700 hover:border-[#deb152] hover:bg-[#fdfaf3]",
+                    )}
+                  >
+                    <Landmark className={cn("size-3.5", filters.jurisdiction ? "text-[#b88c32]" : "text-ink-400")} />
+                    <span className="truncate max-w-[130px] sm:max-w-none">
+                      {filters.jurisdiction
+                        ? filters.jurisdiction === "federal"
+                          ? "Federal Law"
+                          : filters.jurisdiction.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+                        : "All Jurisdictions"}
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "size-3 transition-transform text-ink-400",
+                        showJurisdictionMenu && "rotate-180 text-ink-800",
+                      )}
+                    />
+                  </button>
+
+                  {showJurisdictionMenu && (
+                    <div className="absolute right-0 top-full z-30 mt-1.5 w-60 rounded-2xl border border-[#ded5c2] bg-white p-2 shadow-xl animate-fade-in">
+                      <div className="px-2.5 py-1.5 border-b border-[#f0e9dc] mb-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-[#8a7550]">JURISDICTION</p>
+                        <p className="text-[11px] text-ink-400">Select legal territory</p>
+                      </div>
+                      <div className="max-h-64 overflow-y-auto scroll-thin space-y-0.5">
+                        <button
+                          onClick={() => {
+                            setFilters((f) => ({ ...f, jurisdiction: undefined }));
+                            setShowJurisdictionMenu(false);
+                          }}
+                          className={cn(
+                            "flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs transition-colors",
+                            !filters.jurisdiction
+                              ? "bg-[#fbf5e7] font-bold text-[#8a6527]"
+                              : "text-ink-700 hover:bg-[#f4eee2]",
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            <Landmark className="size-3.5 text-ink-400" />
+                            <span>All Jurisdictions</span>
+                          </div>
+                          {!filters.jurisdiction && <Check className="size-3.5 text-[#deb152]" />}
+                        </button>
+                        {JURISDICTIONS.map((j) => {
+                          const active = filters.jurisdiction === j;
+                          const label =
+                            j === "federal"
+                              ? "Federal Negarit Gazette"
+                              : j.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+                          return (
+                            <button
+                              key={j}
+                              onClick={() => {
+                                setFilters((f) => ({ ...f, jurisdiction: j }));
+                                setShowJurisdictionMenu(false);
+                              }}
+                              className={cn(
+                                "flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs transition-colors",
+                                active ? "bg-[#fbf5e7] font-bold text-[#8a6527]" : "text-ink-700 hover:bg-[#f4eee2]",
+                              )}
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <span className={cn("size-1.5 rounded-full shrink-0", active ? "bg-[#deb152]" : "bg-ink-300")} />
+                                <span className="truncate">{label}</span>
+                              </div>
+                              {active && <Check className="size-3.5 text-[#deb152] shrink-0 ml-1.5" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Status Model-Picker */}
+                <div className="relative" ref={statusRef}>
+                  <button
+                    onClick={() => {
+                      setShowStatusMenu((v) => !v);
+                      setShowJurisdictionMenu(false);
+                    }}
+                    className={cn(
+                      "inline-flex items-center gap-2 rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all shadow-2xs cursor-pointer",
+                      filters.status
+                        ? "border-[#deb152] bg-[#fdfaf3] text-ink-950 font-semibold"
+                        : "border-[#ded5c2] bg-white text-ink-700 hover:border-[#deb152] hover:bg-[#fdfaf3]",
+                    )}
+                  >
+                    <ShieldCheck className={cn("size-3.5", filters.status ? "text-[#b88c32]" : "text-ink-400")} />
+                    <span className="truncate max-w-[120px] sm:max-w-none">
+                      {filters.status ? STATUS_LABELS[filters.status] ?? filters.status : "All Statuses"}
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "size-3 transition-transform text-ink-400",
+                        showStatusMenu && "rotate-180 text-ink-800",
+                      )}
+                    />
+                  </button>
+
+                  {showStatusMenu && (
+                    <div className="absolute right-0 top-full z-30 mt-1.5 w-56 rounded-2xl border border-[#ded5c2] bg-white p-2 shadow-xl animate-fade-in">
+                      <div className="px-2.5 py-1.5 border-b border-[#f0e9dc] mb-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-[#8a7550]">ENACTMENT STATUS</p>
+                        <p className="text-[11px] text-ink-400">Filter by legal validity</p>
+                      </div>
+                      <div className="space-y-0.5">
+                        <button
+                          onClick={() => {
+                            setFilters((f) => ({ ...f, status: undefined }));
+                            setShowStatusMenu(false);
+                          }}
+                          className={cn(
+                            "flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs transition-colors",
+                            !filters.status
+                              ? "bg-[#fbf5e7] font-bold text-[#8a6527]"
+                              : "text-ink-700 hover:bg-[#f4eee2]",
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            <ShieldCheck className="size-3.5 text-ink-400" />
+                            <span>All Statuses</span>
+                          </div>
+                          {!filters.status && <Check className="size-3.5 text-[#deb152]" />}
+                        </button>
+                        {STATUSES.map((s) => {
+                          const active = filters.status === s;
+                          return (
+                            <button
+                              key={s}
+                              onClick={() => {
+                                setFilters((f) => ({ ...f, status: s }));
+                                setShowStatusMenu(false);
+                              }}
+                              className={cn(
+                                "flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-xs transition-colors",
+                                active ? "bg-[#fbf5e7] font-bold text-[#8a6527]" : "text-ink-700 hover:bg-[#f4eee2]",
+                              )}
+                            >
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className={cn(
+                                    "size-1.5 rounded-full shrink-0",
+                                    s === "IN_FORCE"
+                                      ? "bg-[#10b981]"
+                                      : s === "AMENDED"
+                                        ? "bg-[#deb152]"
+                                        : "bg-ink-400",
+                                  )}
+                                />
+                                <span>{STATUS_LABELS[s] ?? s}</span>
+                              </div>
+                              {active && <Check className="size-3.5 text-[#deb152] shrink-0 ml-1.5" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Search Input Row */}
+            <div className="mt-4 flex flex-col sm:flex-row gap-2.5">
+              <input
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void ask();
+                  }
+                }}
+                placeholder={
+                  uiLang === "am"
+                    ? "ስለ ኢትዮጵያ ሕግ ይጠይቁ… ለምሳሌ «የአዋጅ 1396/2025 አንቀጽ 3 ምን ይላል?»"
+                    : 'Ask about Ethiopian law, e.g. "What does Article 3 of Proclamation 1396/2025 say?"'
+                }
+                className={cn(
+                  "flex-1 rounded-xl border border-[#ded5c2] bg-white px-4 py-3 text-sm text-ink-900 placeholder:text-ink-400 focus:border-[#deb152] focus:outline-none focus:ring-2 focus:ring-[#deb152]/30 shadow-2xs",
+                  uiLang === "am" && "ethiopic",
+                )}
+              />
+              <button
+                onClick={() => void ask()}
+                disabled={loading || !question.trim()}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#deb152] px-8 py-3 text-sm font-semibold text-ink-950 transition-all hover:bg-[#d4a544] disabled:cursor-not-allowed disabled:opacity-50 shadow-sm shrink-0"
+              >
+                {loading ? <Spinner /> : <Search className="size-4" />}
+                <span>{loading ? "Searching…" : "Search"}</span>
+              </button>
+            </div>
+
+            {/* Try Suggestions Row */}
+            <div className="mt-3.5 flex flex-wrap items-center gap-2 text-xs">
+              <span className="font-medium text-ink-400">Try</span>
+              {TRY_SUGGESTIONS.map((item, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setQuestion(item.q);
+                    void ask(item.q);
+                  }}
+                  className={cn(
+                    "rounded-full border border-[#ded5c2] bg-[#fbf9f4] px-3.5 py-1 text-xs text-ink-700 transition-colors hover:border-[#deb152] hover:bg-[#fdfaf3] hover:text-ink-900",
+                    /[ሀ-፞]/.test(item.text) && "ethiopic font-medium",
+                  )}
+                >
+                  {item.text}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Search Results (When Active) ─────────────────────────────────── */}
+          {loading && (
+            <div className="mt-8 rounded-2xl border border-[#ded5c2] bg-white p-6 shadow-xs animate-rise">
+              <div className="shimmer h-6 w-48 rounded" />
+              <div className="shimmer mt-4 h-32 rounded-xl" />
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="shimmer h-24 rounded-xl" />
+                <div className="shimmer h-24 rounded-xl" />
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="mt-6 flex items-center justify-between rounded-xl border border-clay-600/30 bg-clay-100 p-4 text-sm text-clay-600">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="size-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+              <button
+                onClick={() => setError(null)}
+                className="text-xs font-semibold underline hover:text-clay-700"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
+          {response && !loading && (
+            <div className="mt-8 rounded-2xl border border-[#ded5c2] bg-white p-6 shadow-sm animate-rise">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#f0e9dc] pb-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <ConfidenceBadge
+                    level={response.confidence}
+                    label={
+                      response.confidence === "STRONG"
+                        ? t(uiLang, "strong")
+                        : response.confidence === "MODERATE"
+                          ? t(uiLang, "moderate")
+                          : t(uiLang, "insufficient")
+                    }
+                  />
+                  <span className="rounded-full border border-ink-200 bg-[#fbf9f4] px-2.5 py-1 text-[11px] font-medium text-ink-600">
+                    Route: {response.route}
+                  </span>
+                  <span className="num text-[11px] text-ink-400">
+                    {response.retrieval.latencyMs}ms
+                    {response.retrieval.llmLatencyMs != null && ` · LLM ${response.retrieval.llmLatencyMs}ms`}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    setResponse(null);
+                    setQuestion("");
+                  }}
+                  className="flex items-center gap-1.5 rounded-lg border border-ink-200 px-3 py-1 text-xs font-medium text-ink-600 transition hover:bg-ink-50"
+                >
+                  <RotateCcw className="size-3.5" /> Back to overview
+                </button>
+              </div>
+
+              {response.notices.length > 0 && (
+                <div className="mt-3.5 space-y-1.5">
+                  {response.notices.map((n, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 rounded-lg border border-gold-600/25 bg-gold-100/70 px-3 py-2 text-[12px] text-gold-600"
+                    >
+                      <Info className="mt-0.5 size-3.5 shrink-0" />
+                      <span className={cn(uiLang === "am" && "ethiopic")}>{n}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {response.answer ? (
+                <div className="mt-4">
+                  <p className="label-caps mb-3 flex items-center gap-1.5 text-[#8a7550]">
+                    <BookOpenText className="size-3.5" /> {t(uiLang, "answer")}
+                  </p>
+                  {renderMd(response.answer, answerIsAm)}
+                </div>
+              ) : (
+                <div className="mt-4 rounded-xl border border-dashed border-ink-200 p-4 text-xs text-ink-500">
+                  {t(uiLang, "noSources")}
+                </div>
+              )}
+
+              {response.sources.length > 0 && (
+                <div className="mt-7 border-t border-[#f0e9dc] pt-5">
+                  <p className="label-caps mb-3 flex items-center gap-1.5 text-[#8a7550]">
+                    <Library className="size-3.5" /> {t(uiLang, "sources")} · {response.sources.length}
+                  </p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {response.sources.map((s) => (
+                      <SourceCardView
+                        key={s.chunkId}
+                        source={s}
+                        uiLang={uiLang}
+                        onOpen={() => setActiveChunk(s.chunkId)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <details className="mt-6 rounded-xl border border-[#e8dfcf] bg-[#fbf9f4] p-3 text-[11.5px] text-ink-500">
+                <summary className="cursor-pointer font-semibold text-ink-700">Retrieval diagnostics</summary>
+                <div className="num mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  <div>vector: {response.retrieval.vectorResults}</div>
+                  <div>BM25: {response.retrieval.keywordResults}</div>
+                  <div>fused: {response.retrieval.fusedResults}</div>
+                  <div>top score: {response.retrieval.topScore}</div>
+                </div>
+                <p className="mt-2 text-[10.5px] italic text-ink-400">
+                  confidence basis: {response.confidenceBasis}
+                </p>
+              </details>
+            </div>
+          )}
+
+          {/* ── Auto-Sliding Dynamic Horizontal LEGAL AREAS Carousel ─────────── */}
+          <section className="mt-8">
+            <div className="mb-3.5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#8a7550]">LEGAL AREAS</p>
+            </div>
+
+            {/* Marquee Container with edge gradients */}
+            <div className="relative overflow-hidden rounded-2xl border border-[#ded5c2] bg-gradient-to-b from-[#fbf9f4] to-white p-3.5 shadow-2xs group">
+              {/* Left and right gradient fade overlays */}
+              <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white/90 to-transparent z-10" />
+              <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/90 to-transparent z-10" />
+
+              <div className="animate-marquee flex gap-3.5 py-1">
+                {[...LEGAL_AREAS, ...LEGAL_AREAS].map((area, idx) => {
+                  const Icon = area.icon;
+                  return (
+                    <button
+                      key={`${area.key}-${idx}`}
+                      onClick={() => {
+                        setFilters((f) => ({ ...f, category: area.key }));
+                        const q = uiLang === "am" ? area.queryAm : area.queryEn;
+                        setQuestion(q);
+                        void ask(q);
+                      }}
+                      className="group/card flex w-64 sm:w-72 shrink-0 flex-col rounded-xl border border-[#ded5c2] bg-white p-4 text-left transition-all hover:border-[#deb152] hover:shadow-md hover:-translate-y-0.5 cursor-pointer shadow-2xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex size-9 items-center justify-center rounded-lg border border-[#f0e3c5] bg-[#fbf5e7] text-[#c2963a] transition-transform group-hover/card:scale-110">
+                          <Icon className="size-4.5" />
+                        </div>
+                        <span className="rounded-full bg-[#f4eee2] px-2 py-0.5 text-[10px] font-semibold text-[#8a6527] uppercase tracking-wide">
+                          Law
+                        </span>
+                      </div>
+                      <div className="mt-3">
+                        <h4 className="text-sm font-bold text-ink-950 group-hover/card:text-[#9e7626] transition-colors">
+                          {uiLang === "am" ? area.titleAm : area.titleEn}
+                        </h4>
+                        <p className="mt-0.5 text-xs text-ink-500 line-clamp-1">
+                          {uiLang === "am" ? area.descAm : area.descEn}
+                        </p>
+                      </div>
+                      <div className="mt-3.5 flex items-center justify-between pt-2.5 border-t border-[#f2ede4]">
+                        <span className="text-[11px] font-medium text-[#b88c32]">
+                          {health?.stats?.chunks ?? 0} provisions
+                        </span>
+                        <span className="text-xs font-semibold text-ink-400 group-hover/card:text-[#b88c32] group-hover/card:translate-x-0.5 transition-all">
+                          Search →
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+
+          {/* ── Priority Sources Section ───────────────────────────────────── */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-3.5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#8a7550]">PRIORITY SOURCES</p>
+              <Link
+                href="/admin"
+                className="text-xs font-semibold text-[#8a6527] hover:text-[#5e4312] transition-colors"
+              >
+                Open Corpus Library →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 rounded-2xl border border-[#ded5c2] bg-white p-5 shadow-2xs">
+              <div className="flex items-center justify-between rounded-xl border border-[#f2ede4] bg-[#fbf9f4] p-4 text-xs">
+                <div>
+                  <p className="font-bold text-sm text-ink-950">Startup Proclamation No. 1396/2025</p>
+                  <p className="text-[11px] text-ink-500 mt-0.5">Federal Negarit Gazette · Official Enactment</p>
+                </div>
+                <span
+                  className={cn(
+                    "rounded-full px-3 py-1 text-[11px] font-semibold shrink-0 ml-3",
+                    (health?.stats?.documents ?? 0) > 0
+                      ? "bg-[#dcefdf] text-[#2e7d4f]"
+                      : "bg-[#fceee4] text-[#b45309]",
+                  )}
+                >
+                  {(health?.stats?.documents ?? 0) > 0 ? "Indexed & Grounded" : "Not uploaded"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between rounded-xl border border-[#f2ede4] bg-[#fbf9f4] p-4 text-xs">
+                <div>
+                  <p className="font-bold text-sm text-ink-950">Federal Gazettes & Proclamations</p>
+                  <p className="text-[11px] text-ink-500 mt-0.5">Labor, Commercial Code, Civil Code & Regulations</p>
+                </div>
+                <span className="rounded-full bg-[#f1f3f6] px-3 py-1 text-[11px] font-semibold text-ink-600 shrink-0 ml-3">
+                  {health?.stats?.documents ?? 0} uploaded
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Disclaimer */}
+          <footer className="mt-14 border-t border-[#ded5c2]/60 py-6 text-center">
+            <p className="text-xs text-ink-400">
+              Legal information based on indexed official sources, not a substitute for advice from a qualified legal
+              professional.
+            </p>
+          </footer>
         </div>
+      </main>
+
+      {/* Slide-over Source Sheet */}
+      {activeChunk && (
+        <SourceSheet chunkId={activeChunk} uiLang={uiLang} onClose={() => setActiveChunk(null)} />
       )}
-
-      <footer className="mt-14 border-t hairline pt-4">
-        <p className={cn("mx-auto max-w-3xl text-center text-[11.5px] leading-relaxed text-ink-400", uiLang === "am" && "ethiopic")}>
-          {t(uiLang, "disclaimer")}
-        </p>
-        <p className="mt-1 text-center text-[10.5px] text-ink-300">
-          Ethiopian Legal RAG · hybrid BGE-M3 + BM25 retrieval · article-level citations · federal &amp; regional jurisdiction aware
-        </p>
-      </footer>
-
-      {activeChunk && <SourceSheet chunkId={activeChunk} uiLang={uiLang} onClose={() => setActiveChunk(null)} />}
     </div>
   );
 }
@@ -696,25 +1130,28 @@ function SourceCardView({
   onOpen: () => void;
 }) {
   return (
-    <Card hover onClick={onOpen} className="flex flex-col p-4">
+    <Card hover onClick={onOpen} className="flex flex-col p-4 bg-white border-[#ded5c2] rounded-xl shadow-2xs">
       <div className="flex items-start justify-between gap-2">
-        <span className="rounded-md bg-ink-900 px-2 py-0.5 font-mono text-[11px] font-bold text-brass-300">[{s.ref}]</span>
+        <span className="rounded-md bg-[#0d1625] px-2 py-0.5 font-mono text-[11px] font-bold text-[#deb152]">
+          [{s.ref}]
+        </span>
         <StatusChip status={s.status} />
       </div>
-      <h4 className="font-display mt-2 line-clamp-2 text-[14.5px] font-semibold leading-snug text-ink-900">
+      <h4 className="font-display mt-2 line-clamp-2 text-[14px] font-semibold leading-snug text-ink-950">
         {s.title}
       </h4>
-      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px] text-ink-500">
-        {s.proclamationNumber && <span className="num font-semibold text-brass-600">№ {s.proclamationNumber}</span>}
+      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-ink-500">
+        {s.proclamationNumber && <span className="num font-semibold text-[#b88c32]">№ {s.proclamationNumber}</span>}
         {s.article && (
-          <span className="rounded bg-brass-100 px-1.5 py-0.5 font-semibold text-brass-700">
-            {t(uiLang, "article")} {s.article}{s.subArticle ? `(${s.subArticle})` : ""}
+          <span className="rounded bg-[#fbf5e7] border border-[#f0e3c5] px-1.5 py-0.5 font-semibold text-[#8a6527]">
+            {t(uiLang, "article")} {s.article}
+            {s.subArticle ? `(${s.subArticle})` : ""}
           </span>
         )}
         {s.page != null && <span className="num">{t(uiLang, "page")} {s.page}</span>}
         <LangBadge language={s.language} />
         {s.pairedLanguage && (
-          <span className="inline-flex items-center gap-0.5 rounded border border-brass-500/30 px-1 py-0.5 text-[9.5px] text-brass-600">
+          <span className="inline-flex items-center gap-0.5 rounded border border-[#deb152]/40 bg-[#fbf5e7] px-1 py-0.5 text-[9.5px] text-[#8a6527]">
             <Languages className="size-2.5" /> pair
           </span>
         )}

@@ -1,215 +1,254 @@
-# Ethiopian Legal RAG — Bilingual (Amharic/English) Legal Research AI
+<p align="center">
+  <img src="public/logo.svg" alt="Negarit (ነጋሪት) Logo" width="340" />
+</p>
 
-A production-grade retrieval-augmented legal research system for Ethiopian law.
-It retrieves relevant legal provisions **first**, then answers **strictly** from
-those retrieved sources with article-level, page-level citations — in Amharic
-or English. It never invents a legal provision: when the corpus is insufficient
-it says so explicitly.
+<h1 align="center">Negarit (ነጋሪት)</h1>
+<h3 align="center">Bilingual (Amharic/English) Ethiopian Legal Research & Retrieval-Augmented Generation AI</h3>
 
-> **Legal notice** — This system provides legal information based on its indexed
-> sources and is not a substitute for advice from a qualified legal professional.
-
----
-
-## 1. Architecture
-
-```
-Next.js 16 (App Router, TypeScript, Tailwind, shadcn-style UI)
-├─ src/app/*                       → research console + admin dashboard + API routes
-└─ src/server/*                    → the backend service layer
-     ├── core/                     → config, constants, shared types (schemas/)
-     ├── embeddings/huggingface.ts → BAAI/bge-m3 via HF Inference Providers (+ cache)
-     ├── ingestion/pdf.ts          → PDF.js text-layer extraction (PyMuPDF equivalent)
-     ├── ingestion/segment.ts      → bilingual separation, article/sub-article chunking
-     ├── ingestion/pipeline.ts     → PDF → chunks → embeddings → indexes (async jobs)
-     ├── retrieval/bm25.ts         → Unicode-aware BM25 (Ethiopic-safe tokenizer)
-     ├── retrieval/qdrant.ts       → optional Qdrant backend (REST, fail-soft)
-     ├── retrieval/hybrid.ts       → routing, exact lookup, RRF fusion, reranking
-     ├── rag/pipeline.ts           → orchestration + memory + confidence + refusal
-     ├── llm/openrouter.ts         → OpenRouter-compatible generation, strict prompt
-     ├── citations/validate.ts     → citation existence validation (anti-hallucination)
-     └── services/documents.ts     → document/admin service layer
-PostgreSQL (Drizzle ORM)           → documents, versions, articles, chunks, jobs,
-                                     sessions, messages, retrieval logs, embedding cache
-Qdrant (optional)                  → mirrored chunk vectors + payload filters
-```
-
-The requested `backend/app/{api,core,models,schemas,services,ingestion,retrieval,
-rag,llm,embeddings,citations}` layout maps 1:1 onto `src/server/*`; everything is
-served by one deployable Next.js runtime (frontend + REST API). Each stage is a
-typed service class/module so the pipeline can be moved into a standalone worker
-unchanged if desired.
-
-### RAG pipeline
-
-```
-QUESTION → language detection (Ethiopic script) → query routing
-         → exact legal-identifier lookup (1396/2025, "Article 3", አንቀጽ 3)
-         → BGE-M3 dense vector search (Qdrant | PostgreSQL cosine fallback)
-           + BM25 keyword search → Reciprocal Rank Fusion (k=60)
-         → metadata filters (status/jurisdiction/category/language/year)
-         → status preference (IN_FORCE/AMENDED first; historical only when asked)
-         → metadata-aware reranking → top 6 chunks (configurable)
-         → strict grounded generation (OpenRouter LLM) with [S#] references
-         → citation validation against PostgreSQL → answer + source cards
-```
-
-Every stage is journalised: retrieval logs, ingestion job logs, per-question
-diagnostics (visible in the UI under "Retrieval diagnostics").
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16.2-black?style=flat-square&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-5.9-blue?style=flat-square&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/PostgreSQL-17-336791?style=flat-square&logo=postgresql" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Drizzle_ORM-0.45-C5F74F?style=flat-square" alt="Drizzle ORM" />
+  <img src="https://img.shields.io/badge/Embeddings-BAAI%2Fbge--m3-orange?style=flat-square" alt="BAAI/bge-m3" />
+  <img src="https://img.shields.io/badge/Vector_DB-Qdrant_%7C_PGVector-red?style=flat-square" alt="Vector DB" />
+  <img src="https://img.shields.io/badge/License-Proprietary%20%2F%20Research-green?style=flat-square" alt="License" />
+</p>
 
 ---
 
-## 2. Quickstart
+## 🧭 Evaluators' & Judges' Fast Track
 
+If you are a judge or evaluator reviewing this project, start with these dedicated resources:
+
+| Resource | Purpose |
+|---|---|
+| 📋 [**Judges' Evaluation Guide**](JUDGES_GUIDE.md) | **5-minute live demo script**, copy-paste test questions, anti-hallucination verification, and scoring rubric alignment. |
+| 🏗️ [**System Architecture & Technical Specs**](docs/ARCHITECTURE.md) | Deep-dive into Ethiopic segmentation, RRF fusion, bilingual pairing, and database schemas. |
+| 📡 [**REST API Reference**](docs/API_REFERENCE.md) | Complete documentation of all backend endpoints with request/response payloads. |
+| ⚖️ [**Ethiopian Legal System Context**](docs/ETHIOPIAN_LEGAL_SYSTEM_CONTEXT.md) | Context on the Federal Negarit Gazette, FDRE Constitution Art. 106 bilingual supremacy, and legal hierarchy. |
+
+---
+
+## 🌟 What is Negarit (ነጋሪት)?
+
+**Negarit (ነጋሪት)** is a production-grade, citation-grounded, bilingual legal research AI built for the legal framework of the Federal Democratic Republic of Ethiopia. 
+
+Named after the historic imperial drum (*ነጋሪት*) traditionally sounded to herald state proclamations, Negarit solves the core failure mode of generic LLMs in African jurisprudence: **uncontrolled hallucination and lack of authentic legal grounding**.
+
+### Core Pillars
+1. **Strict Article-Level Grounding:** Answers are generated **exclusively** from retrieved provisions of official Federal Negarit Gazettes, accompanied by exact article and page-level citations.
+2. **Constitutional Bilingualism:** Seamlessly queries and answers in both **Amharic (Ethiopic Ge'ez script)** and **English**, with automatic parallel article pairing (reflecting the legal supremacy of Amharic under Art. 106 of the FDRE Constitution).
+3. **Anti-Hallucination & Honest Refusal:** If an article or decree is unindexed or absent from the corpus, Negarit **refuses to invent laws**, transparently displaying the retrieval confidence and searches performed.
+4. **Temporal Legislative Awareness:** Tracks the real-world lifecycle of laws (`IN_FORCE`, `AMENDED`, `REPEALED`, `SUPERSEDED`, `HISTORICAL`), prioritizing current enactments.
+
+> **Legal Disclaimer:** Negarit provides legal information grounded in authentic indexed enactments and is not a substitute for formal counsel from a licensed advocate.
+
+---
+
+## 🖥️ Modern User Interface & Features
+
+Negarit features a modern, responsive web application inspired by contemporary AI research consoles:
+
+### 1. ChatGPT-Style Research Console
+- **Collapsible Navigation Sidebar**: Houses active research sessions, language toggle (English / አማርኛ), and instant search history.
+- **User Profile Card**: Personalized researcher identity badge at the base of the navigation panel.
+- **AI Model-Picker Style Dropdowns**: Precision filter pills for:
+  - **Jurisdiction**: Select between Federal and 14 Regional states & chartered cities (Oromia, Amhara, Tigray, Somali, Sidama, Addis Ababa, Dire Dawa, etc.).
+  - **Enactment Status**: Toggle `IN_FORCE`, `AMENDED`, `REPEALED`, `SUPERSEDED`, or `HISTORICAL`.
+- **Dynamic Legal Areas Carousel**: Continuous, auto-sliding horizontal marquee highlighting key Ethiopian legal sectors (Startups, Labor, Commercial Code, Tax, Civil Rights, Intellectual Property). Hovering automatically pauses the animation; clicking any card executes an instant targeted research query.
+
+### 2. Bento Telemetry Admin Suite (`/admin`)
+- **Pillar 1: Corpus Assets & Density Bar**: High-density analytics showing indexed proclamations, articles, and chunk storage metrics.
+- **Pillar 2: Vector Intelligence Hub**: Real-time memory footprint, active embedding model telemetry, and an **Interactive Embedding Test Bench** to test BGE-M3 vector generation live on any phrase.
+- **Pillar 3: Real-Time Engine Telemetry Cockpit**: Live status indicators for PostgreSQL connectivity, Vector DB backend, Hugging Face API, and LLM inference.
+- **Automated Ingestion Pipeline**: Drag-and-drop Negarit Gazette PDF uploader with live extraction, segmentation, and vectorization status.
+
+---
+
+## 🔬 Tri-Tier Retrieval Architecture
+
+```
+User Legal Query (Amharic or English)
+        │
+        ├──▶ 1. Exact Match Router (e.g. Proclamation "1396/2025", "Article 3", "አንቀጽ 3")
+        │
+        ├──▶ 2. Sparse Keyword Search: Unicode-Aware BM25 (Ethiopic script compatible)
+        │
+        └──▶ 3. Dense Cross-Lingual Vector Search: BAAI/bge-m3 (1024-dim, Qdrant/Postgres)
+        │
+        ▼
+Reciprocal Rank Fusion (RRF, k=60)
+Score = Σ 1 / (60 + rank_bm25) + 1 / (60 + rank_dense)
+        │
+        ▼
+Metadata & Enactment Status Reranker (Prioritizes IN_FORCE; applies jurisdiction filters)
+        │
+        ▼
+Strict Grounded Generation (OpenRouter LLM) with [S#] Citation Grammars
+        │
+        ▼
+PostgreSQL Citation Verification Guard (Confirms every cited chunk exists in database)
+        │
+        ▼
+Answer Delivered with Interactive Verified Source Cards & Diagnostic Metrics
+```
+
+---
+
+## ⚡ Quickstart
+
+### Prerequisites
+- Node.js 20+
+- PostgreSQL 15+ (local instance or Docker)
+- Optional: Hugging Face API Token (for BGE-M3 embeddings) & OpenRouter API Key (for LLM generation)
+
+### 1. Clone & Install
 ```bash
-cp .env.example .env      # fill in HF_TOKEN, OPENROUTER_API_KEY, LLM_MODEL (optional but recommended)
+git clone https://github.com/sight09/Negarit---.git
+cd Negarit---
 npm ci
-npx drizzle-kit push      # create PostgreSQL tables
-npm run dev               # http://localhost:3000
 ```
 
-Docker (PostgreSQL + Qdrant + app):
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env` and configure your credentials:
+```bash
+cp .env.example .env
+```
+
+| Variable | Description | Default / Requirement |
+|---|---|---|
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:password@localhost:5432/legal_rag_db` (Required) |
+| `HF_TOKEN` | Hugging Face token for `BAAI/bge-m3` | Recommended (falls back to BM25 if missing) |
+| `OPENROUTER_API_KEY` | OpenRouter API Key for LLM synthesis | Recommended (falls back to verbatim excerpts) |
+| `LLM_MODEL` | Generator model ID | `google/gemini-2.0-flash-001` or `anthropic/claude-3.5-sonnet` |
+| `QDRANT_URL` | Qdrant REST Endpoint | Optional (falls back to PostgreSQL pgvector) |
+
+### 3. Push Database Schema
+```bash
+npm run db:push
+```
+
+### 4. Start Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the Negarit research console.
+
+---
+
+## 🐳 Docker Deployment
+
+To spin up the complete stack (Next.js app + PostgreSQL + Qdrant) via Docker:
 
 ```bash
 docker compose up --build
 ```
 
-## 3. Environment variables
+---
 
-| Variable | Purpose | Required |
-|---|---|---|
-| `DATABASE_URL` | PostgreSQL connection string | yes |
-| `QDRANT_URL` / `QDRANT_API_KEY` | Qdrant REST endpoint (falls back to PostgreSQL cosine search when absent) | no |
-| `HF_TOKEN` | Hugging Face token for `BAAI/bge-m3` embeddings | recommended |
-| `HF_MODEL` | override embedding model id | no (default `BAAI/bge-m3`) |
-| `OPENROUTER_API_KEY` / `LLM_MODEL` | OpenRouter-compatible LLM for generation | recommended |
-| `ADMIN_TOKEN` | when set, all admin mutations require `x-admin-token` header | prod |
-| `RETRIEVE_TOP_K` / `RERANK_TOP_K` / `CONTEXT_CHUNKS` | retrieval tuning (20 / 6 / 6) | no |
-| `CONFIDENCE_STRONG` / `CONFIDENCE_MODERATE` | confidence thresholds | no |
+## 📥 Ingesting Your First Legal Document
 
-**Graceful degradation by design**
+The corpus ships intentionally empty to avoid fabricated text. To ingest the landmark **Ethiopian Startup Proclamation No. 1396/2025**:
 
-| Missing | Behaviour |
-|---|---|
-| `HF_TOKEN` | ingest skips vectors; retrieval = BM25-only; UI shows the notice |
-| `OPENROUTER_API_KEY`/`LLM_MODEL` | answers become verbatim source excerpts (still grounded + cited) |
-| Qdrant down | vectors searched via PostgreSQL cosine similarity |
+### Via the Admin Web Console:
+1. Open [http://localhost:3000/admin](http://localhost:3000/admin).
+2. Under **"Upload legal document"**, choose your Negarit Gazette PDF.
+3. Enter metadata:
+   - **Title**: `Ethiopian Startup Proclamation`
+   - **Proclamation Number**: `1396/2025`
+   - **Jurisdiction**: `Federal`
+   - **Category**: `Startup / Business`
+   - **Status**: `IN_FORCE`
+4. Click **"Upload & ingest"** and watch the live progress bar.
 
-Secrets are read server-side only and are never shipped to the browser.
-
-## 4. Ingesting the first document (Startup Proclamation No. 1396/2025)
-
-The corpus ships **empty on purpose** — no fabricated legal texts. Put the real
-Federal Negarit Gazette PDF in `corpus/federal/` and either:
-
-**A. Admin dashboard** — `/admin` → *Upload legal document* → set metadata
-(title `Ethiopian Startup Proclamation`, № `1396/2025`, category `startup`,
-jurisdiction `federal`, status `IN_FORCE`, source `Federal Negarit Gazette`,
-language `bilingual`) → *Upload & ingest*. Watch the job progress live, open the
-*Chunk explorer* to verify Amharic/English article pairing, then ask the test
-questions below from the console.
-
-**B. CLI** —
-
+### Via the CLI:
 ```bash
 node scripts/ingest.mjs corpus/federal/startup-proclamation-1396-2025.pdf \
-  --title "Ethiopian Startup Proclamation" --proc 1396/2025 --category startup \
-  --status IN_FORCE --jurisdiction federal --language bilingual \
-  --source "Federal Negarit Gazette" --gazette "Federal Negarit Gazette"
+  --title "Ethiopian Startup Proclamation" \
+  --proc 1396/2025 \
+  --category startup \
+  --status IN_FORCE \
+  --jurisdiction federal \
+  --language bilingual \
+  --source "Federal Negarit Gazette"
 ```
 
-First test questions (both languages):
+---
 
-1. `What is the Ethiopian Startup Proclamation?`
-2. `What is the scope of application of the Startup Proclamation?`
-3. `What does Article 3 of Proclamation 1396/2025 say?`
-4. `የኢትዮጵያ የስታርታፕ አዋጅ ምንድነው?`
-5. `የአዋጁ የተፈፃሚነት ወሰን ምንድነው?`
-6. `Show me Article 3 in English.`
-7. `Show me the Amharic version of Article 3.`
-8. `What is Proclamation 1396/2025?`
+## 📊 Automated Evaluation Harness
 
-The ingestion pipeline extracts the text layer (PDF.js), separates Amharic /
-English segments, detects `Article N` / `አንቀጽ N` boundaries, chunks on legal
-structure (never blind 500-char splits), pairs bilingual versions of the same
-article, batch-embeds with BGE-M3 (cached by SHA-256), and indexes into
-PostgreSQL + Qdrant with full metadata (status, jurisdiction, category, page,
-proclamation number, extraction method). Scanned PDFs fail loudly with an
-`OCR` flag instead of being silently mis-indexed; OCR ingest is the documented
-extension point (`ingestion/pdf.ts` → `ScannedPdfError`).
+Negarit includes an automated evaluation harness testing **175 curated legal questions** across five categories:
+- 50 English Legal Queries
+- 50 Amharic Legal Queries
+- 25 Cross-Language Inquiries
+- 25 Exact Article/Proclamation Lookups
+- 25 Historical & Amendment Probes
 
-## 5. CLI scripts
+To run the automated evaluation suite against a running instance:
 
 ```bash
-node scripts/ingest.mjs <file.pdf> [--meta...]   # upload + ingest via the API
-node scripts/reindex.mjs <documentId|all>        # re-index from stored original
-node scripts/evaluate.mjs                        # run the evaluation harness
+npm run eval
 ```
 
-## 6. Evaluation
+Metrics evaluated:
+- **Recall@5 & Recall@10**
+- **Mean Reciprocal Rank (MRR)**
+- **Citation Accuracy** (100% verified against PostgreSQL chunk IDs)
+- **Groundedness Ratio**
+- **Language Consistency & Script Fidelity**
+- **Refusal Honesty Ratio** (Honest refusal when asked for unindexed provisions)
 
-`evaluation/` contains 175 test questions (50 EN, 50 AM, 25 cross-language,
-25 exact article/proclamation lookups, 25 historical/current-law probes) with
-expected proclamation/article metadata. `npm`-less, run:
+---
 
-```bash
-node scripts/evaluate.mjs            # needs the app running (BASE=http://localhost:3000)
+## 🛡️ Graceful Degradation by Design
+
+Negarit is built to be resilient in real-world infrastructure constraints:
+
+- **Missing HF_TOKEN:** Ingestion skips vector generation and operates purely on Unicode-aware BM25 keyword search.
+- **Missing LLM Key:** Synthesizer serves verbatim extracted legal text with full citation cards and page numbers intact.
+- **Qdrant Down:** Automatically falls back to PostgreSQL pgvector cosine similarity search.
+- **Scanned Image PDFs:** Ingestion pipeline flags PDFs lacking digital text layers as `OCR_REQUIRED` rather than indexing garbage.
+
+---
+
+## 📂 Project Directory Structure
+
+```
+├── corpus/federal/            # Directory for official Negarit Gazette PDFs
+├── docs/                      # Technical specifications & legal context
+│   ├── ARCHITECTURE.md        # Deep-dive system architecture
+│   ├── API_REFERENCE.md       # REST API documentation
+│   └── ETHIOPIAN_LEGAL_SYSTEM_CONTEXT.md # Jurisdictional framework
+├── evaluation/                # 175-question automated evaluation dataset
+├── public/                    # Logos, SVG assets, and icons
+├── scripts/                   # CLI ingestion, reindexing, and evaluation
+├── src/
+│   ├── app/                   # Next.js App Router (pages & API routes)
+│   ├── components/            # UI components (Sidebar, Console, Bento suite)
+│   ├── db/                    # Drizzle ORM schema & PostgreSQL client
+│   ├── lib/                   # Shared client utilities, i18n, types
+│   └── server/                # Backend service layer
+│       ├── citations/         # PostgreSQL citation verification guard
+│       ├── embeddings/        # BGE-M3 Hugging Face inference & caching
+│       ├── ingestion/         # PDF extraction, Ethiopic segmentation, chunking
+│       ├── llm/               # Grounded OpenRouter synthesis
+│       ├── rag/               # Orchestration pipeline & confidence scoring
+│       └── retrieval/         # Exact routing, BM25, Qdrant & RRF fusion
+└── JUDGES_GUIDE.md            # Dedicated evaluation guide for competition judges
 ```
 
-Metrics reported per dataset and overall: **Recall@5, Recall@10, MRR, citation
-accuracy, groundedness (validated-citation ratio), language accuracy**, and a
-**corpus coverage** column that honestly separates "retrieval failed" from
-"source not indexed yet". Report written to `evaluation/report.json`.
+---
 
-## 7. API
+## ⚖️ Citation & Academic Attribution
 
-| Method | Path | Purpose |
-|---|---|---|
-| POST | `/api/chat` | grounded answer + citations + retrieval diagnostics (`skipLlm` for eval) |
-| POST | `/api/search` | metadata + hybrid chunk search with all filters |
-| POST | `/api/embeddings` | BGE-M3 test/utility (admin) |
-| POST | `/api/documents` | upload PDF + metadata (multipart, admin) |
-| GET | `/api/documents` | list + status + latest job |
-| GET/DELETE | `/api/documents/{id}` | detail (articles, versions, jobs, relationships) / delete (admin) |
-| POST | `/api/documents/{id}/ingest` · `/reindex` | async ingestion jobs (admin) |
-| GET | `/api/documents/{id}/chunks` | chunk explorer (`language`, `q`, pagination) |
-| GET | `/api/documents/{id}/pdf` | original gazette PDF |
-| GET | `/api/sources/{chunkId}` | full citation payload incl. bilingual pair |
-| GET | `/api/health` | subsystem status (always 200, no secrets) |
-| GET | `/api/analytics` | corpus/jobs/latency aggregates |
+If you utilize Negarit in your research or legal technology development, please cite:
 
-## 8. Confidence model
-
-Labels are derived from retrieval signals, **never** from LLM self-confidence:
-
-- **Strong source match** — exact proclamation/article metadata hit, or top
-  fused score ≥ `CONFIDENCE_STRONG` with ≥2 corroborating chunks.
-- **Moderate source match** — top fused score between the moderate and strong
-  thresholds.
-- **Insufficient source match** — below threshold or no candidates → the system
-  refuses to answer and shows searches performed + related documents instead.
-
-## 9. Security
-
-PDF-only uploads (extension + MIME), 25MB cap, SHA-256 dedupe, storage
-filenames derived from content hash (path traversal impossible), admin token
-guard on all mutations, zod validation on every endpoint, secrets confined to
-server modules, no API keys in logs.
-
-## 10. Acceptance checklist
-
-Backend/frontend boot, PostgreSQL + (optional) Qdrant connectivity, BGE-M3
-embeddings, PDF extraction (EN/AM), article detection, bilingual pairing,
-chunk metadata, Qdrant/PostgreSQL indexing, BM25 + vector + hybrid search,
-exact proclamation/article lookup, current/historical filtering, grounded
-generation with validated citations and page numbers, Amharic & English
-answers, cross-language retrieval, honest no-result behaviour, admin upload /
-re-index / error visibility, no exposed secrets. Verify end-to-end with the
-eight questions in §4 and `node scripts/evaluate.mjs`.
-
-## 11. Known limitations
-
-- OCR for scanned gazettes is detected and flagged but not executed (extension point documented).
-- Side-by-side two-column bilingual layouts are handled best-effort and produce an ingestion warning.
-- Amharic numerals (፩፪፫) in article headings are normalized for Arabic-digit
-  markers; extend `segment.ts` regexes to broaden heading coverage.
+```bibtex
+@software{negarit2026,
+  author = {Negarit Project Team},
+  title = {Negarit: Bilingual (Amharic/English) Ethiopian Legal Research AI},
+  year = {2026},
+  url = {https://github.com/sight09/Negarit---}
+}
+```
