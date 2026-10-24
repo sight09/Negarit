@@ -610,16 +610,16 @@ export default function ResearchConsole() {
           </div>
 
           {/* Hero Heading */}
-          <div className="mt-8">
-            <h1 className="font-display font-serif text-3xl sm:text-4xl lg:text-[42px] font-bold tracking-tight text-[#0c1626] leading-tight">
+          <div className="mt-8 flex flex-col items-center text-center">
+            <h1 className="font-display font-serif text-3xl sm:text-4xl lg:text-[40px] font-bold tracking-tight text-[#0c1626] leading-tight text-balance">
               {uiLang === "am"
-                ? "የኢትዮጵያን ሕግ በታማኝ ምንጮች ይመርምሩ"
-                : "Research Ethiopian law with grounded citations"}
+                ? "የኢትዮጵያን ሕግ በታማኝ የነጋሪት ጋዜጣ አንቀጾች ይመርምሩ"
+                : "Research Ethiopian Law with Verified Citations"}
             </h1>
-            <p className="mt-2.5 max-w-3xl text-sm leading-relaxed text-ink-600">
+            <p className="mt-2.5 w-full max-w-4xl text-sm leading-relaxed text-ink-600 mx-auto text-center">
               {uiLang === "am"
-                ? "ድብልቅ BGE-M3 እና BM25 ፍለጋ፣ በሕግ ሁኔታ እና ክልል የተጣራ፣ ከዚያም በአንቀጽ ደረጃ ማስረጃዎች የተደገፈ። በአማርኛ ወይም በእንግሊዝኛ ይጠይቁ።"
-                : "Hybrid BGE-M3 and BM25 retrieval, filtered by legal status and jurisdiction, then grounded in article-level citations. Ask in Amharic or English."}
+                ? "ይፋዊ የፌዴራል ነጋሪት ጋዜጣ ድንጋጌዎችን በአማርኛ እና በእንግሊዝኛ በታማኝ ማስረጃዎች ይመርምሩ።"
+                : "Bilingual legal intelligence across official Federal Negarit Gazettes with zero-hallucination citations in Amharic and English."}
             </p>
           </div>
 

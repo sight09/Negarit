@@ -6,6 +6,7 @@ import Image from "next/image";
 import {
   AlertTriangle,
   ArrowLeft,
+  Check,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
@@ -13,12 +14,16 @@ import {
   Database,
   FileText,
   FileUp,
+  Globe,
   KeyRound,
+  Landmark,
   Layers,
   Loader2,
   RefreshCw,
+  Scale,
   Search,
   Server,
+  ShieldCheck,
   Sparkles,
   Trash2,
   UploadCloud,
@@ -452,15 +457,37 @@ export default function AdminDashboard() {
           <Field label="Title *" name="title" placeholder="Ethiopian Startup Proclamation" span={2} />
           <Field label="Amharic title" name="titleAm" placeholder="የስታርታፕ አዋጅ" amharic />
           <Field label="Proclamation №" name="proclamationNumber" placeholder="1396/2025" mono />
-          <SelectField label="Document type" name="documentType" options={DOC_TYPES} defaultValue="proclamation" />
-          <SelectField label="Category" name="category" options={CATEGORIES} defaultValue="startup" />
-          <SelectField label="Jurisdiction" name="jurisdiction" options={JURISDICTIONS} />
-          <SelectField label="Legal status" name="status" options={STATUSES} />
+          <SelectField label="Document type" name="documentType" options={DOC_TYPES} defaultValue="proclamation" icon={FileText} />
+          <SelectField label="Category" name="category" options={CATEGORIES} defaultValue="startup" icon={Layers} />
+          <SelectField
+            label="Jurisdiction"
+            name="jurisdiction"
+            options={JURISDICTIONS}
+            defaultValue="federal"
+            icon={Landmark}
+            labels={{ federal: "Federal Negarit Gazette" }}
+          />
+          <SelectField
+            label="Legal status"
+            name="status"
+            options={STATUSES}
+            defaultValue="IN_FORCE"
+            icon={ShieldCheck}
+            labels={{
+              IN_FORCE: "In Force",
+              AMENDED: "Amended",
+              REPEALED: "Repealed",
+              SUPERSEDED: "Superseded",
+              HISTORICAL: "Historical",
+              UNKNOWN: "Unknown",
+            }}
+          />
           <SelectField
             label="Language"
             name="language"
             options={["bilingual", "am", "en"]}
             defaultValue="bilingual"
+            icon={Globe}
             labels={{ bilingual: "Bilingual (Am + En)", am: "አማርኛ", en: "English" }}
           />
           <Field label="Publication date" name="publicationDate" placeholder="2025-07-17" mono />
@@ -469,7 +496,14 @@ export default function AdminDashboard() {
           <Field label="Gazette №" name="gazetteNumber" placeholder="Year 31 No. 60" />
           <Field label="Source (authority) *" name="source" placeholder="Federal Negarit Gazette" span={2} />
           <Field label="Source URL" name="sourceUrl" placeholder="https://…" mono />
-          <SelectField label="Source type" name="sourceType" options={["PRIMARY", "SECONDARY"]} />
+          <SelectField
+            label="Source type"
+            name="sourceType"
+            options={["PRIMARY", "SECONDARY"]}
+            defaultValue="PRIMARY"
+            icon={Scale}
+            labels={{ PRIMARY: "Primary Source", SECONDARY: "Secondary Source" }}
+          />
           <Field label="Amends (reference)" name="amends" placeholder="Proclamation № amended by this law" />
           <Field label="Repeals (reference)" name="repeals" placeholder="Proclamation № repealed by this law" />
           <Field label="Notes" name="notes" placeholder="Internal notes" span={2} />
@@ -735,12 +769,12 @@ function Field({
 }) {
   return (
     <label className={cn("block", span === 2 && "sm:col-span-2")}>
-      <span className="label-caps mb-1 block">{label}</span>
+      <span className="label-caps mb-1 block text-ink-600 font-semibold">{label}</span>
       <input
         name={name}
         placeholder={placeholder}
         className={cn(
-          "w-full rounded-lg border border-ink-200 bg-paper-50 px-2.5 py-1.5 text-[12.5px] outline-none focus:border-brass-500",
+          "w-full rounded-xl border border-[#ded5c2] bg-white px-3 py-2 text-xs outline-none transition-all shadow-2xs focus:border-[#deb152] focus:bg-[#fdfaf3] text-ink-900 placeholder:text-ink-400",
           mono && "num font-mono",
           amharic && "ethiopic",
         )}
@@ -750,22 +784,95 @@ function Field({
 }
 
 function SelectField({
-  label, name, options, defaultValue, labels,
+  label,
+  name,
+  options,
+  defaultValue,
+  labels,
+  icon: Icon,
 }: {
-  label: string; name: string; options: string[]; defaultValue?: string; labels?: Record<string, string>;
+  label: string;
+  name: string;
+  options: string[];
+  defaultValue?: string;
+  labels?: Record<string, string>;
+  icon?: React.ComponentType<{ className?: string }>;
 }) {
+  const [value, setValue] = useState(defaultValue ?? options[0]);
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
+
+  const displayLabel = labels?.[value] ?? value.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
   return (
-    <label className="block">
-      <span className="label-caps mb-1 block">{label}</span>
-      <select
-        name={name}
-        defaultValue={defaultValue ?? options[0]}
-        className="w-full appearance-none rounded-lg border border-ink-200 bg-paper-50 px-2.5 py-1.5 text-[12.5px] outline-none focus:border-brass-500"
+    <div className="relative block" ref={containerRef}>
+      <input type="hidden" name={name} value={value} />
+      <span className="label-caps mb-1 block text-ink-600 font-semibold">{label}</span>
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className={cn(
+          "flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-all shadow-2xs cursor-pointer text-left",
+          open
+            ? "border-[#deb152] bg-[#fdfaf3] text-ink-950 font-semibold ring-2 ring-[#deb152]/20"
+            : "border-[#ded5c2] bg-white text-ink-800 hover:border-[#deb152] hover:bg-[#fdfaf3]",
+        )}
       >
-        {options.map((o) => (
-          <option key={o} value={o}>{labels?.[o] ?? o.replace(/_/g, " ")}</option>
-        ))}
-      </select>
-    </label>
+        <div className="flex items-center gap-2 min-w-0">
+          {Icon && <Icon className="size-3.5 shrink-0 text-[#b88c32]" />}
+          <span className="truncate">{displayLabel}</span>
+        </div>
+        <ChevronDown
+          className={cn(
+            "size-3.5 shrink-0 text-ink-400 transition-transform duration-200",
+            open && "rotate-180 text-ink-800",
+          )}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full z-40 mt-1.5 w-full min-w-[200px] rounded-2xl border border-[#ded5c2] bg-white p-1.5 shadow-xl animate-fade-in">
+          <div className="px-2.5 py-1.5 border-b border-[#f0e9dc] mb-1">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-[#8a7550]">{label}</p>
+            <p className="text-[10.5px] text-ink-400">Select option</p>
+          </div>
+          <div className="max-h-56 overflow-y-auto scroll-thin space-y-0.5">
+            {options.map((o) => {
+              const isSelected = value === o;
+              const text = labels?.[o] ?? o.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+              return (
+                <button
+                  key={o}
+                  type="button"
+                  onClick={() => {
+                    setValue(o);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    "flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs transition-colors cursor-pointer",
+                    isSelected
+                      ? "bg-[#fbf5e7] font-bold text-[#8a6527]"
+                      : "text-ink-700 hover:bg-[#f4eee2] hover:text-ink-950",
+                  )}
+                >
+                  <span className="truncate">{text}</span>
+                  {isSelected && <Check className="size-3.5 text-[#deb152] shrink-0" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
