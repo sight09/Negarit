@@ -105,8 +105,8 @@ Answer Delivered with Interactive Verified Source Cards & Diagnostic Metrics
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/sight09/Negarit---.git
-cd Negarit---
+git clone https://github.com/sight09/Negarit.git
+cd Negarit
 npm ci
 ```
 
@@ -249,6 +249,6 @@ If you utilize Negarit in your research or legal technology development, please 
   author = {Negarit Project Team},
   title = {Negarit: Bilingual (Amharic/English) Ethiopian Legal Research AI},
   year = {2026},
-  url = {https://github.com/sight09/Negarit---}
+  url = {https://github.com/sight09/Negarit}
 }
 ```
