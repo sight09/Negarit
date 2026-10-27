@@ -9,6 +9,7 @@ import {
   MoreHorizontal,
   PanelLeft,
   PanelLeftClose,
+  PanelLeftOpen,
   Scale,
   Search,
   User,
@@ -130,71 +131,94 @@ export function Sidebar({
           <div
             className={cn(
               "flex items-center shrink-0",
-              isCollapsed ? "justify-center flex-col gap-3" : "justify-between",
+              isCollapsed ? "justify-center" : "justify-between",
             )}
           >
-            <Link
-              href="/"
-              className={cn(
-                "flex items-center gap-3 group transition-transform",
-                isCollapsed && "justify-center",
-              )}
-              title="Negarit · Ethiopian Legal AI"
-            >
-              <div className="flex size-9 shrink-0 items-center justify-center transition-transform group-hover:scale-105">
-                <Image
-                  src="/logo.png"
-                  alt="Negarit Logo"
-                  width={36}
-                  height={36}
-                  className="size-full object-contain"
-                  priority
-                />
-              </div>
-
-              {!isCollapsed && (
-                <div className="overflow-hidden">
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="font-serif text-lg font-bold tracking-tight text-white">
-                      Negarit
-                    </span>
-                    <span className="ethiopic text-sm font-semibold text-[#deb152]">ነጋሪት</span>
-                  </div>
-                  <p className="text-[11px] font-medium text-[#7e92ac] truncate">
-                    Ethiopian Legal AI
-                  </p>
-                </div>
-              )}
-            </Link>
-
-            {/* Collapse toggle button for Desktop (Header only) */}
-            <div className="hidden md:flex items-center">
+            {isCollapsed ? (
+              /* Collapsed mode: single button that shows logo, swaps to expand icon on hover (ChatGPT style) */
               <button
                 type="button"
                 onClick={onToggleCollapse}
-                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                className={cn(
-                  "flex size-8 items-center justify-center rounded-lg border border-[#1e2d42] bg-[#121d2d] text-[#7e92ac] transition-colors hover:border-[#deb152]/60 hover:bg-[#17253a] hover:text-white",
-                  isCollapsed && "mt-1",
-                )}
+                aria-label="Expand sidebar"
+                className="group relative flex size-11 items-center justify-center rounded-xl border border-transparent transition-all duration-200 hover:border-[#1e2d42] hover:bg-[#142135]"
               >
-                {isCollapsed ? (
-                  <PanelLeft className="size-4 text-[#deb152]" />
-                ) : (
-                  <PanelLeftClose className="size-4" />
-                )}
-              </button>
-            </div>
+                {/* Logo (Default) */}
+                <div className="flex size-8 shrink-0 items-center justify-center transition-all duration-200 group-hover:scale-75 group-hover:opacity-0">
+                  <Image
+                    src="/logo.png"
+                    alt="Negarit Logo"
+                    width={32}
+                    height={32}
+                    className="size-full object-contain"
+                    priority
+                  />
+                </div>
 
-            {/* Close button for Mobile */}
-            <button
-              type="button"
-              onClick={onMobileClose}
-              className="rounded-lg p-1 text-[#7e92ac] hover:bg-[#17253a] hover:text-white md:hidden"
-            >
-              <X className="size-5" />
-            </button>
+                {/* Collapse / Expand Icon (Hover) */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-75 transition-all duration-200 group-hover:scale-100 group-hover:opacity-100 pointer-events-none">
+                  <PanelLeftOpen className="size-5 text-[#deb152] transition-colors" />
+                </div>
+
+                {/* Floating tooltip like ChatGPT */}
+                <span className="pointer-events-none absolute left-full ml-3 hidden md:inline-flex items-center rounded-lg border border-[#1e2d42] bg-[#101b2b] px-2.5 py-1 text-xs font-medium text-white shadow-xl opacity-0 -translate-x-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0 z-50 whitespace-nowrap">
+                  Expand sidebar
+                </span>
+              </button>
+            ) : (
+              /* Expanded mode: brand logo + title on left, collapse button on right */
+              <>
+                <Link
+                  href="/"
+                  className="flex items-center gap-3 group transition-transform"
+                  title="Negarit · Ethiopian Legal AI"
+                >
+                  <div className="flex size-9 shrink-0 items-center justify-center transition-transform group-hover:scale-105">
+                    <Image
+                      src="/logo.png"
+                      alt="Negarit Logo"
+                      width={36}
+                      height={36}
+                      className="size-full object-contain"
+                      priority
+                    />
+                  </div>
+
+                  <div className="overflow-hidden">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-serif text-lg font-bold tracking-tight text-white">
+                        Negarit
+                      </span>
+                      <span className="ethiopic text-sm font-semibold text-[#deb152]">ነጋሪት</span>
+                    </div>
+                    <p className="text-[11px] font-medium text-[#7e92ac] truncate">
+                      Ethiopian Legal AI
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Collapse toggle button for Desktop (Header only) */}
+                <div className="hidden md:flex items-center">
+                  <button
+                    type="button"
+                    onClick={onToggleCollapse}
+                    title="Collapse sidebar"
+                    aria-label="Collapse sidebar"
+                    className="flex size-8 items-center justify-center rounded-lg border border-[#1e2d42] bg-[#121d2d] text-[#7e92ac] transition-colors hover:border-[#deb152]/60 hover:bg-[#17253a] hover:text-white"
+                  >
+                    <PanelLeftClose className="size-4" />
+                  </button>
+                </div>
+
+                {/* Close button for Mobile */}
+                <button
+                  type="button"
+                  onClick={onMobileClose}
+                  className="rounded-lg p-1 text-[#7e92ac] hover:bg-[#17253a] hover:text-white md:hidden"
+                >
+                  <X className="size-5" />
+                </button>
+              </>
+            )}
           </div>
 
           {/* Scrollable Navigation Sections */}
